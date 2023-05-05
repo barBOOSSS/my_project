@@ -14,9 +14,11 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h2><a href=${pageContext.request.contextPath}/?id=1>1 - Регистрация</a></h2>
-<h2><a href=${pageContext.request.contextPath}/?id=2>2 - Войти в аккаунт</a></h2>
-<h2><a href=${pageContext.request.contextPath}/?id=3>3 - Выход</a></h2>
+<h2><a href=${pageContext.request.contextPath}/main?id=1>1 - Список комнат</a></h2>
+<h2><a href=${pageContext.request.contextPath}/main?id=2>2 - Список заказов</a></h2>
+<c:if test="${ sessionScope.user.role == 'ADMIN'}">
+    <h2><a href=${pageContext.request.contextPath}/main?id=3>3 - Список пользователей</a></h2>
+</c:if>
 
 <%@ include file="footer.jsp" %>
 </body>

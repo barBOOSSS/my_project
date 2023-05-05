@@ -1,179 +1,134 @@
 package by.pleshkov.database.dao;
 
 
-import by.pleshkov.database.connection.ConnectionManager;
+import by.pleshkov.database.connection.ConnectionPool;
 import by.pleshkov.database.constant.Role;
-import by.pleshkov.database.model.User;
+import by.pleshkov.database.entity.User;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class UserDao implements IDao<User> {
+public class UserDao {
 
     private static final UserDao INSTANCE = new UserDao();
+    public static final String SELECT_BY_EMAIL_PASS = "SELECT * FROM users WHERE email = ? AND password = ?";
+    public static final String SELECT_ALL = "SELECT * FROM users";
+    public static final String SELECT_BY_ID = SELECT_ALL + " WHERE id = ?";
+    public static final String INSERT = "INSERT INTO users (name, surname, password, email, role) VALUES (?, ?, ?, ?, ?)";
+    public static final String UPDATE = "UPDATE users SET name = ?, surname = ?, password = ?, email = ?, role = ?  WHERE id = ?";
+    public static final String DELETE_BY_ID = "DELETE FROM users WHERE id = ?";
 
-    public User create(User user) {
-        final String sql = "INSERT INTO users (login, password, role) VALUES (?,?,?)";
-        final int firstParameter = 1;
-        final int secondParameter = 2;
-        final int thirdDParameter = 3;
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(firstParameter, user.getLogin());
-            stmt.setString(secondParameter, user.getPassword());
-            stmt.setString(thirdDParameter, String.valueOf(user.getRole()));
-            stmt.execute();
-            return user;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+    public Optional<User> create(User user) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getSurname());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, String.valueOf(user.getRole()));
+            preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                user.setId(generatedKeys.getLong("id"));
             }
+            return Optional.of(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
-        return null;
     }
 
-    @Override
-    public User read(long id) {
-        User user = User.builder().build();
-        final String sql = "SELECT * FROM users";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                if (id == rs.getInt("id")) {
-                    user.setId(rs.getLong("id"));
-                    user.setLogin(rs.getString("login"));
-                    user.setPassword(rs.getString("password"));
-                    user.setRole(Role.valueOf(rs.getString("role")));
-                    return user;
-                }
-            }
-        } catch (ClassNotFoundException | SQLException e) {
+    public Optional<User> findByID(Long id) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? Optional.of(User.builder()
+                    .id(resultSet.getLong("id"))
+                    .name(resultSet.getString("name"))
+                    .surname(resultSet.getString("surname"))
+                    .password(resultSet.getString("password"))
+                    .email(resultSet.getString("email"))
+                    .role(Role.valueOf(resultSet.getString("role")))
+                    .build()) : Optional.empty();
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            return Optional.empty();
         }
-        return user;
     }
 
-    public User readByLoginAndPassword(String login, String password) {
-        User user = User.builder().build();
-        final String sql = "SELECT * FROM users";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                if (login.equals(rs.getString("login")) && password.equals(rs.getString("password"))) {
-                    user.setId(rs.getLong("id"));
-                    user.setLogin(rs.getString("login"));
-                    user.setPassword(rs.getString("password"));
-                    user.setRole(Role.valueOf(rs.getString("role")));
-                    return user;
-                }
-            }
-        } catch (ClassNotFoundException | SQLException e) {
+    public Optional<User> getByEmailAndPass(String email, String password) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_EMAIL_PASS)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? Optional.of(User.builder()
+                    .id(resultSet.getLong("id"))
+                    .name(resultSet.getString("name"))
+                    .surname(resultSet.getString("surname"))
+                    .password(resultSet.getString("password"))
+                    .email(resultSet.getString("email"))
+                    .role(Role.valueOf(resultSet.getString("role")))
+                    .build()) : Optional.empty();
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            return Optional.empty();
         }
-        return user;
     }
 
-    public boolean update(User user) {
-        final String sql = "UPDATE users SET login=?, password=?, role=? WHERE id=?";
-        final int firstParameter = 1;
-        final int secondParameter = 2;
-        final int thirdDParameter = 3;
-        final int fourthParameter = 4;
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(firstParameter, user.getLogin());
-            stmt.setString(secondParameter, user.getPassword());
-            stmt.setString(thirdDParameter, String.valueOf(user.getRole()));
-            stmt.setInt(fourthParameter, (int) user.getId());
-            boolean isExecution = stmt.execute();
-            return isExecution;
-        } catch (ClassNotFoundException | SQLException e) {
+    public Optional<User> update(User user) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getSurname());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, String.valueOf(user.getRole()));
+            preparedStatement.setLong(6, user.getId());
+            preparedStatement.executeUpdate();
+            return Optional.of(user);
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            return Optional.empty();
         }
-        return false;
     }
 
-    public boolean delete(long id) {
-        final String sql = "DELETE FROM users WHERE login=?";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, Math.toIntExact(id));
-            boolean isExecution = stmt.execute();
-            return isExecution;
-        } catch (ClassNotFoundException | SQLException e) {
+    public boolean delete(Long id) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            return false;
         }
-        return false;
     }
 
-    public List<User> readAll() {
+    public List<User> findAll() {
         List<User> users = new ArrayList<>();
-        final String sql = "SELECT * FROM users";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                User user = User.builder().build();
-                user.setId(rs.getLong("id"));
-                user.setLogin(rs.getString("login"));
-                user.setPassword(rs.getString("password"));
-                user.setRole(Role.valueOf(rs.getString("role")));
-                users.add(user);
+        try (Connection connection = ConnectionPool.get();
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL);
+            while (resultSet.next()) {
+                users.add(User.builder()
+                        .id(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .surname(resultSet.getString("surname"))
+                        .password(resultSet.getString("password"))
+                        .email(resultSet.getString("email"))
+                        .role(Role.valueOf(resultSet.getString("role")))
+                        .build());
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return users;
     }

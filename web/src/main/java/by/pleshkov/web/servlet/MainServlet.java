@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/")
+@WebServlet("/main")
 public class MainServlet extends HttpServlet {
 
     @Override
@@ -24,13 +24,13 @@ public class MainServlet extends HttpServlet {
 
     public void menu(String id, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if ("1".equals(id)) {
-            resp.sendRedirect("/registration");
+            resp.sendRedirect("/rooms");
         }
         if ("2".equals(id)) {
-            resp.sendRedirect("/login");
+            resp.sendRedirect("/orders");
         }
         if ("3".equals(id)) {
-            resp.sendRedirect("/logout");
+            resp.sendRedirect("/users");
         }
     }
 }

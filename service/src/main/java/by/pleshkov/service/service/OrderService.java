@@ -1,74 +1,45 @@
 package by.pleshkov.service.service;
 
+import by.pleshkov.database.constant.Solution;
+import by.pleshkov.database.constant.StatusOrder;
 import by.pleshkov.database.dao.OrderDao;
-import by.pleshkov.database.model.Order;
+import by.pleshkov.database.entity.Order;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public class OrderService implements IService<Order> {
+public class OrderService {
 
     private static final OrderService INSTANCE = new OrderService();
-    private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
     private final OrderDao orderDao = OrderDao.getInstance();
 
-    public Order create(Order order) {
-        try {
-            if (orderDao.create(order).equals(null)) {
-                log.log(Level.INFO, "Заказ не создан");
-                return null;
-            } else {
-                return order;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+    public Optional<Order> save(Order order) {
+        return orderDao.create(order);
     }
 
-    public Order read(long id) {
-        try {
-            Order order = orderDao.read(id);
-            if (order.equals(null)) {
-                log.log(Level.INFO, "Заказ не найден");
-                return null;
-            } else {
-                return order;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Order getById(Long id) {
+        return orderDao.findByID(id)
+                .orElse(Order.builder()
+                        .statusOrder(StatusOrder.NEW)
+                        .solution(Solution.DENIED)
+                        .build());
     }
 
-    public boolean update(Order order) {
-        try {
-            if (orderDao.update(order)) {
-                log.log(Level.INFO, "Заказ не обновлен");
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public Optional<Order> update(Order order) {
+        return orderDao.update(order);
     }
 
-
-    public boolean delete(long id) {
-        try {
-            if (orderDao.delete(id)) {
-                log.log(Level.INFO, "Заказ не удален");
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean delete(Long id) {
+        return orderDao.delete(id);
     }
 
     public List<Order> readAll() {
-        return orderDao.readAll();
+        return orderDao.getAll();
     }
 
     public static OrderService getInstance() {

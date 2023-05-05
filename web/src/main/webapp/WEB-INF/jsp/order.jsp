@@ -21,6 +21,17 @@
     <h2>Статус заказа: ${order.statusOrder}</h2>
     <h2>Решение: ${order.solution} </h2>
 
+<form action="${pageContext.request.contextPath}/order-edit" method="get">
+    <input type="submit" value="Изменить">
+
+    <form action="${pageContext.request.contextPath}/orders" method="post">
+        <input type="hidden" name="id" value="${order.id}">
+        <input type="submit" value="Удалить">
+
+        <c:if test="${ param.error == true}">
+        Заказ не удален
+        </c:if>
+
 <%@ include file="footer.jsp" %>
 </body>
 </html>

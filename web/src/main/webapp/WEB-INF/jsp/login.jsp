@@ -15,17 +15,17 @@
 <%@ include file="header.jsp" %>
 
 <form action="${pageContext.request.contextPath}/login" method="post">
-    <label for="loginId">Login:</label><br>
-    <input type="text" id="loginId" name="login"><br>
+    <label for="emailId">Email:</label><br>
+    <input type="email" id="emailId" name="email"><br>
 
     <label for="passwordId">Password:</label><br>
     <input type="password" id="passwordId" name="password"><br><br>
 
-    <input type="submit" value="Submit">
+    <input type="submit" value="Login">
 </form>
 
 <c:if test="${ param.error == true}">
-Неправильный логин или пароль
+Неправильный email или пароль
 </c:if>
 
 <%@ include file="footer.jsp" %>

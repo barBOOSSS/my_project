@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-
 @WebServlet("/orders")
 public class OrderServlet extends HttpServlet {
 
@@ -23,7 +22,7 @@ public class OrderServlet extends HttpServlet {
             req.setAttribute("orders", orderService.readAll());
             req.getRequestDispatcher(PagesUtil.ORDERS).forward(req, resp);
         } else {
-            req.setAttribute("order", orderService.read(Long.parseLong(id)));
+            req.setAttribute("order", orderService.getById(Long.parseLong(id)));
             req.getRequestDispatcher(PagesUtil.ORDER).forward(req, resp);
         }
     }

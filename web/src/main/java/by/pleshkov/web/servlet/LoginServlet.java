@@ -1,6 +1,6 @@
 package by.pleshkov.web.servlet;
 
-import by.pleshkov.database.model.User;
+import by.pleshkov.database.entity.User;
 import by.pleshkov.service.service.UserService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 
@@ -22,15 +23,23 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        String email = req.getParameter("email");
         String password = req.getParameter("password");
-        User user = userService.readLoginAndPassword(login, password);
-        if (user.getId() != 0) {
-            req.getSession().setAttribute("user", user);
-            resp.sendRedirect("/orders");
-        } else {
-            resp.sendRedirect("/login?error=true");
-        }
+        userService.getBy(email, password)
+                .ifPresentOrElse(
+                        user -> successLogin(req, resp, user),
+                        () -> failedLogin(req, resp));
+    }
+
+    @SneakyThrows
+    private static void successLogin(HttpServletRequest req, HttpServletResponse resp, User user) {
+        req.getSession().setAttribute("user", user);
+        resp.sendRedirect("/main");
+    }
+
+    @SneakyThrows
+    private static void failedLogin(HttpServletRequest req, HttpServletResponse resp) {
+        resp.sendRedirect("/login?error=true");
     }
 }

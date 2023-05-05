@@ -1,171 +1,140 @@
 package by.pleshkov.database.dao;
 
 
-import by.pleshkov.database.connection.ConnectionManager;
+import by.pleshkov.database.connection.ConnectionPool;
 import by.pleshkov.database.constant.ClassRoom;
-import by.pleshkov.database.constant.Status;
-import by.pleshkov.database.model.Room;
+import by.pleshkov.database.constant.StatusRoom;
+import by.pleshkov.database.dto.RoomFilter;
+import by.pleshkov.database.entity.Room;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-
-public class RoomDao implements IDao<Room> {
+public class RoomDao {
 
     private static final RoomDao INSTANCE = new RoomDao();
+    public static final String SELECT_ALL = "SELECT * FROM rooms";
+    public static final String SELECT_BY_ID = SELECT_ALL + " WHERE id = ?";
+    public static final String INSERT = "INSERT INTO rooms (number, places, class_room, status_room) VALUES (?, ?, ?, ?)";
+    public static final String UPDATE = "UPDATE rooms SET number = ?, places = ?, class_room = ?, status_room = ? WHERE id = ?";
+    public static final String DELETE_BY_ID = "DELETE FROM rooms WHERE id = ?";
+    public static final String SELECT_BY = "SELECT * FROM rooms WHERE places < ? AND class_room = ? AND status_room = ? LIMIT ? OFFSET ?";
 
-    public Room create(Room room) {
-        final String sql = "INSERT INTO rooms (id, number, places, class, status, user) VALUES (?,?,?,?,?,?)";
-        final int firstParameter = 1;
-        final int secondParameter = 2;
-        final int thirdDParameter = 3;
-        final int fourthParameter = 4;
-        final int fightHParameter = 5;
-        final int sixthHParameter = 6;
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(firstParameter, Math.toIntExact(room.getId()));
-            stmt.setInt(secondParameter, room.getNumberRoom());
-            stmt.setInt(thirdDParameter, (room.getPlaces()));
-            stmt.setString(fourthParameter, String.valueOf(room.getClassRoom()));
-            stmt.setString(fightHParameter, String.valueOf(room.getStatus()));
-            stmt.setString(sixthHParameter, room.getUser());
-            boolean isExecution = stmt.execute();
-            return room;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+
+    public Optional<Room> create(Room room) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, room.getNumber());
+            preparedStatement.setInt(2, room.getPlaces());
+            preparedStatement.setString(3, String.valueOf(room.getClassRoom()));
+            preparedStatement.setString(4, String.valueOf(room.getStatusRoom()));
+            preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                room.setId(generatedKeys.getLong("id"));
             }
+            return Optional.of(room);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
-        return room;
     }
 
-    @Override
-    public Room read(long id) {
-        Room room = Room.builder().build();
-        final String sql = "SELECT * FROM numbers";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                if (id == rs.getInt("id")) {
-                    room = Room.builder()
-                            .id(rs.getInt("id"))
-                            .numberRoom(rs.getInt("number"))
-                            .places(rs.getInt("places"))
-                            .classRoom(ClassRoom.valueOf(rs.getString("class")))
-                            .status(Status.valueOf(rs.getString("status")))
-                            .user(rs.getString("user"))
-                            .build();
-                    return room;
-                }
-            }
-        } catch (ClassNotFoundException | SQLException e) {
+    public Optional<Room> findByID(Long id) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? Optional.of(Room.builder()
+                    .id(resultSet.getLong("id"))
+                    .number(resultSet.getInt("number"))
+                    .places(resultSet.getInt("places"))
+                    .classRoom(ClassRoom.valueOf(resultSet.getString("class_room")))
+                    .statusRoom(StatusRoom.valueOf(resultSet.getString("status_room")))
+                    .build()) : Optional.empty();
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            return Optional.empty();
         }
-        return room;
     }
 
-    public boolean update(Room room) {
-        final String sql = "UPDATE numbers SET number=?, places=?, class=?, status=?, user=? WHERE id=?";
-        final int firstParameter = 1;
-        final int secondParameter = 2;
-        final int thirdDParameter = 3;
-        final int fourthParameter = 4;
-        final int fightHParameter = 5;
-        final int sixthHParameter = 6;
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(firstParameter, room.getNumberRoom());
-            stmt.setInt(secondParameter, room.getPlaces());
-            stmt.setString(thirdDParameter, String.valueOf(room.getClassRoom()));
-            stmt.setString(fourthParameter, String.valueOf(room.getStatus()));
-            stmt.setString(fightHParameter, room.getUser());
-            stmt.setInt(sixthHParameter, Math.toIntExact(room.getId()));
-            boolean isExecution = stmt.execute();
-            return isExecution;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    public boolean delete(long id) {
-        final String sql = "DELETE FROM rooms WHERE id=?";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, Math.toIntExact(id));
-            boolean isExecution = stmt.execute();
-            return isExecution;
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public List<Room> readAll() {
-        List<Room> numbers = new ArrayList<>();
-        final String sql = "SELECT * FROM numbers";
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.connect();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                numbers.add(Room.builder()
-                        .id(rs.getInt("id"))
-                        .numberRoom(rs.getInt("number"))
-                        .places(rs.getInt("places"))
-                        .classRoom(ClassRoom.valueOf(rs.getString(("class"))))
-                        .status(Status.valueOf(rs.getString(("status"))))
-                        .user(rs.getString("user"))
+    public List<Room> findByFilter(RoomFilter filter) {
+        List<Room> rooms = new ArrayList<>();
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY)) {
+            preparedStatement.setInt(1, filter.places());
+            preparedStatement.setString(2, filter.classRoom().name());
+            preparedStatement.setString(3, filter.statusRoom().name());
+            preparedStatement.setInt(4, filter.limit());
+            preparedStatement.setInt(5, filter.limit() * (filter.page() - 1));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                rooms.add(Room.builder()
+                        .id(resultSet.getLong("id"))
+                        .number(resultSet.getInt("number"))
+                        .places(resultSet.getInt("places"))
+                        .classRoom(ClassRoom.valueOf(resultSet.getString(("class_room"))))
+                        .statusRoom(StatusRoom.valueOf(resultSet.getString(("status_room"))))
                         .build());
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ConnectionManager.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-        return numbers;
+        return rooms;
+    }
+
+    public Optional<Room> update(Room room) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
+            preparedStatement.setInt(1, room.getNumber());
+            preparedStatement.setInt(2, room.getPlaces());
+            preparedStatement.setString(3, String.valueOf(room.getClassRoom()));
+            preparedStatement.setString(4, String.valueOf(room.getStatusRoom()));
+            preparedStatement.setLong(5, room.getId());
+            preparedStatement.executeUpdate();
+            return Optional.of(room);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    public boolean delete(Long id) {
+        try (Connection connection = ConnectionPool.get();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Room> findAll() {
+        List<Room> rooms = new ArrayList<>();
+        try (Connection connection = ConnectionPool.get();
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL);
+            while (resultSet.next()) {
+                rooms.add(Room.builder()
+                        .id(resultSet.getLong("id"))
+                        .number(resultSet.getInt("number"))
+                        .places(resultSet.getInt("places"))
+                        .classRoom(ClassRoom.valueOf(resultSet.getString(("class_room"))))
+                        .statusRoom(StatusRoom.valueOf(resultSet.getString(("status_room"))))
+                        .build());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rooms;
     }
 
     public static RoomDao getInstance() {

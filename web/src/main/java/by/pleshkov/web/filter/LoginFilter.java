@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(urlPatterns = "/orders")
+@WebFilter(urlPatterns = "/main")
 public class LoginFilter implements Filter {
 
     @Override

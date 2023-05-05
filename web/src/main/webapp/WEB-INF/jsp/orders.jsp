@@ -14,13 +14,16 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.user.login}: ${sessionScope.user.role} </h1>
+<h1> ${sessionScope.user.name}: ${sessionScope.user.role} </h1>
+
+<form action="${pageContext.request.contextPath}/order-created" method="get">
+    <input type="submit" value="Создать заказ">
 
 <c:forEach var="order" items="${requestScope.orders}">
     <h2>ID заказа: ${order.id}</h2>
     <h2>Пользователь: ${order.user}</h2>
     <h2>На сколько мест номер: ${order.places}</h2>
-    <h2>$Класс номера: ${order.classRoom}</h2>
+    <h2>Класс номера: ${order.classRoom}</h2>
     <h2>Статус заказа: ${order.statusOrder}</h2>
     <h2>Решение: ${order.solution} </h2>
     <h2><a href=${pageContext.request.contextPath}/orders?id=${order.id}>Показать заказ</a></h2>

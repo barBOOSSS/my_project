@@ -23,12 +23,42 @@ public class RoomServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         if (id == null) {
+            String places;
+            String classRoom;
+            String statusRoom;
+            String limit;
+            String page;
+            if (req.getParameter("places") == null || req.getParameter("places").isEmpty()) {
+                places = "10";
+            } else {
+                places = req.getParameter("places");
+            }
+            if (req.getParameter("classRoom") == null || req.getParameter("classRoom").isEmpty()) {
+                classRoom = "STANDARD";
+            } else {
+                classRoom = req.getParameter("classRoom");
+            }
+            if (req.getParameter("statusRoom") == null || req.getParameter("statusRoom").isEmpty()) {
+                statusRoom = "NOT_FREE";
+            } else {
+                statusRoom = req.getParameter("statusRoom");
+            }
+            if (req.getParameter("limit") == null || req.getParameter("limit").isEmpty()) {
+                limit = "3";
+            } else {
+                limit = req.getParameter("limit");
+            }
+            if (req.getParameter("page") == null || req.getParameter("page").isEmpty()) {
+                page = "1";
+            } else {
+                page = req.getParameter("page");
+            }
             req.setAttribute("rooms", roomService.getFindByFilter(new RoomFilter(
-                    Integer.parseInt(req.getParameter("places") != null ? req.getParameter("places") : "10"),
-                    ClassRoom.valueOf(req.getParameter("classRoom") != null ? req.getParameter("classRoom") : "STANDARD"),
-                    StatusRoom.valueOf(req.getParameter("statusRoom") != null ? req.getParameter("statusRoom") : "NOT_FREE"),
-                    Integer.parseInt(req.getParameter("limit") != null ? req.getParameter("limit") : "100"),
-                    Integer.parseInt(req.getParameter("page") != null ? req.getParameter("page") : "1")
+                    Integer.parseInt(places),
+                    ClassRoom.valueOf(classRoom),
+                    StatusRoom.valueOf(statusRoom),
+                    Integer.parseInt(limit),
+                    Integer.parseInt(page)
             )));
             req.getRequestDispatcher(PagesUtil.ROOMS).forward(req, resp);
         } else {

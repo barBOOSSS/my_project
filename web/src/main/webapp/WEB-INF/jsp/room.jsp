@@ -22,15 +22,17 @@
 
 <form action="${pageContext.request.contextPath}/room-edit" method="get">
     <input type="submit" value="Изменить">
+</form>
 
-    <form action="${pageContext.request.contextPath}/rooms" method="post">
-        <input type="hidden" name="id" value="${room.id}">
-        <input type="submit" value="Удалить">
+<form action="${pageContext.request.contextPath}/rooms" method="post">
+    <input type="hidden" name="id" value="${room.id}">
+    <input type="submit" value="Удалить">
+</form>
 
-        <c:if test="${ param.error == true}">
-        Комната не удалена
-        </c:if>
+    <c:if test="${ param.error == true}">
+    Комната не удалена
+    </c:if>
 
-        <%@ include file="footer.jsp" %>
+    <%@ include file="footer.jsp" %>
 </body>
 </html>

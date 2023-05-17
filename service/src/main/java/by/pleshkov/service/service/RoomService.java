@@ -3,7 +3,7 @@ package by.pleshkov.service.service;
 
 import by.pleshkov.database.dao.RoomDao;
 import by.pleshkov.database.dto.RoomFilter;
-import by.pleshkov.database.entity.Room;
+import by.pleshkov.database.entity.RoomEntity;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -16,23 +16,23 @@ public class RoomService {
     private static final RoomService INSTANCE = new RoomService();
     private final RoomDao roomDao = RoomDao.getInstance();
 
-    public List<Room> getFindByFilter(RoomFilter filter) {
+    public List<RoomEntity> getFindByFilter(RoomFilter filter) {
         return roomDao.findByFilter(filter);
     }
 
-    public Optional<Room> create(Room room) {
+    public Optional<RoomEntity> create(RoomEntity room) {
         return roomDao.create(room);
     }
 
-    public Room getById(Long id) {
+    public RoomEntity getById(Long id) {
         return roomDao.findByID(id)
-                .orElse(Room.builder()
+                .orElse(RoomEntity.builder()
                         .number(1)
                         .places(2)
                         .build());
     }
 
-    public Optional<Room> update(Room room) {
+    public Optional<RoomEntity> update(RoomEntity room) {
         return roomDao.update(room);
     }
 
@@ -40,7 +40,7 @@ public class RoomService {
             return roomDao.delete(id);
     }
 
-    public List<Room> getAll() {
+    public List<RoomEntity> getAll() {
         return roomDao.findAll();
     }
 

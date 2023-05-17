@@ -1,7 +1,7 @@
 package by.pleshkov.web.servlet;
 
 import by.pleshkov.database.constant.Role;
-import by.pleshkov.database.entity.User;
+import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.service.service.UserService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -26,8 +26,8 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Optional<User> saved = userService.save(
-                User.builder()
+        Optional<UserEntity> saved = userService.save(
+                UserEntity.builder()
                         .name(req.getParameter("name"))
                         .surname(req.getParameter("surname"))
                         .email(req.getParameter("email"))

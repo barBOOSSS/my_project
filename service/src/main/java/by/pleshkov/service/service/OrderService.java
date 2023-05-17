@@ -3,7 +3,7 @@ package by.pleshkov.service.service;
 import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
 import by.pleshkov.database.dao.OrderDao;
-import by.pleshkov.database.entity.Order;
+import by.pleshkov.database.entity.OrderEntity;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -18,19 +18,19 @@ public class OrderService {
     private final OrderDao orderDao = OrderDao.getInstance();
 
 
-    public Optional<Order> save(Order order) {
+    public Optional<OrderEntity> save(OrderEntity order) {
         return orderDao.create(order);
     }
 
-    public Order getById(Long id) {
+    public OrderEntity getById(Long id) {
         return orderDao.findByID(id)
-                .orElse(Order.builder()
+                .orElse(OrderEntity.builder()
                         .statusOrder(StatusOrder.NEW)
                         .solution(Solution.DENIED)
                         .build());
     }
 
-    public Optional<Order> update(Order order) {
+    public Optional<OrderEntity> update(OrderEntity order) {
         return orderDao.update(order);
     }
 
@@ -38,7 +38,7 @@ public class OrderService {
         return orderDao.delete(id);
     }
 
-    public List<Order> readAll() {
+    public List<OrderEntity> readAll() {
         return orderDao.getAll();
     }
 

@@ -3,7 +3,7 @@ package by.pleshkov.web.servlet;
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
 import by.pleshkov.database.dto.RoomFilter;
-import by.pleshkov.database.entity.Room;
+import by.pleshkov.database.entity.RoomEntity;
 import by.pleshkov.service.service.RoomService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -82,13 +82,13 @@ public class RoomServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, Room room) {
+    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, RoomEntity room) {
         req.setAttribute("room", room);
         req.getRequestDispatcher(PagesUtil.ROOM).forward(req, resp);
     }
 
     @SneakyThrows
-    private static void onFailedRemoval(HttpServletRequest req, HttpServletResponse resp, Room room) {
+    private static void onFailedRemoval(HttpServletRequest req, HttpServletResponse resp, RoomEntity room) {
         req.setAttribute("room", room);
         req.setAttribute("error", true);
         req.getRequestDispatcher(PagesUtil.ROOM).forward(req, resp);

@@ -1,11 +1,8 @@
 package by.pleshkov.web.servlet;
 
-import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
-import by.pleshkov.database.constant.StatusRoom;
-import by.pleshkov.database.entity.Order;
-import by.pleshkov.database.entity.Room;
+import by.pleshkov.database.entity.OrderEntity;
 import by.pleshkov.service.service.OrderService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -33,10 +30,10 @@ public class EditOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String id = req.getParameter("id");
-        Order order = orderService.getById(Long.valueOf(id));
+        OrderEntity order = orderService.getById(Long.valueOf(id));
         order.setStatusOrder(StatusOrder.valueOf(req.getParameter("statusOrder")));
         order.setSolution(Solution.valueOf(req.getParameter("solution")));
-        Optional<Order> update = orderService.update(order);
+        Optional<OrderEntity> update = orderService.update(order);
         update.ifPresentOrElse(
                 o -> redirectToRoomPage(req, resp, order),
                 () -> onFailedCreation(req, resp)
@@ -44,7 +41,7 @@ public class EditOrderServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, Order order) {
+    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, OrderEntity order) {
         req.setAttribute("order", order);
         req.getRequestDispatcher(PagesUtil.ORDER).forward(req, resp);
     }

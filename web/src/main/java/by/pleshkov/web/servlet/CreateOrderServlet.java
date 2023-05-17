@@ -2,7 +2,7 @@ package by.pleshkov.web.servlet;
 
 import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
-import by.pleshkov.database.entity.Order;
+import by.pleshkov.database.entity.OrderEntity;
 import by.pleshkov.service.service.OrderService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -27,8 +27,8 @@ public class CreateOrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        Optional<Order> created = orderService.save(
-                Order.builder()
+        Optional<OrderEntity> created = orderService.save(
+                OrderEntity.builder()
                         .statusOrder(StatusOrder.valueOf(req.getParameter("statusOrder")))
                         .solution(Solution.valueOf(req.getParameter("solution")))
                         .build());
@@ -39,7 +39,7 @@ public class CreateOrderServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, Order order) {
+    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, OrderEntity order) {
         req.setAttribute("order", order);
         req.getRequestDispatcher(PagesUtil.ORDER).forward(req, resp);
     }

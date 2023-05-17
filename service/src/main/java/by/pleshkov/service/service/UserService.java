@@ -1,7 +1,7 @@
 package by.pleshkov.service.service;
 
 import by.pleshkov.database.dao.UserDao;
-import by.pleshkov.database.entity.User;
+import by.pleshkov.database.entity.UserEntity;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -14,23 +14,23 @@ public class UserService {
     private static final UserService INSTANCE = new UserService();
     private final UserDao userDao = UserDao.getInstance();
 
-    public Optional<User> save(User user) {
+    public Optional<UserEntity> save(UserEntity user) {
         return userDao.create(user);
     }
 
-    public User getById(Long id) {
+    public UserEntity getById(Long id) {
         return userDao.findByID(id)
-                .orElse(User.builder()
+                .orElse(UserEntity.builder()
                         .name("XXX")
                         .surname("YYYY")
                         .build());
     }
 
-    public Optional<User> getBy(String email, String password) {
+    public Optional<UserEntity> getBy(String email, String password) {
         return userDao.getByEmailAndPass(email, password);
     }
 
-    public Optional<User> update(User user) {
+    public Optional<UserEntity> update(UserEntity user) {
         return userDao.update(user);
     }
 
@@ -38,8 +38,8 @@ public class UserService {
         return userDao.delete(id);
     }
 
-    public List<User> getAll() {
-        List<User> users = userDao.findAll();
+    public List<UserEntity> getAll() {
+        List<UserEntity> users = userDao.findAll();
         return users;
     }
 

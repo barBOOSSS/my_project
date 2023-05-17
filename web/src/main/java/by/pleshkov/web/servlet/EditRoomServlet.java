@@ -3,7 +3,7 @@ package by.pleshkov.web.servlet;
 
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
-import by.pleshkov.database.entity.Room;
+import by.pleshkov.database.entity.RoomEntity;
 import by.pleshkov.service.service.RoomService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -31,12 +31,12 @@ public class EditRoomServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String id = req.getParameter("id");
-        Room room = roomService.getById(Long.valueOf(id));
+        RoomEntity room = roomService.getById(Long.valueOf(id));
         room.setNumber(Integer.parseInt(req.getParameter("number")));
         room.setPlaces(Integer.parseInt(req.getParameter("places")));
         room.setClassRoom(ClassRoom.valueOf(req.getParameter("classRoom")));
         room.setStatusRoom(StatusRoom.valueOf(req.getParameter("statusRoom")));
-        Optional<Room> update = roomService.update(room);
+        Optional<RoomEntity> update = roomService.update(room);
         update.ifPresentOrElse(
                 r -> redirectToRoomPage(req, resp, room),
                 () -> onFailedCreation(req, resp)
@@ -44,7 +44,7 @@ public class EditRoomServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, Room room) {
+    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, RoomEntity room) {
         req.setAttribute("room", room);
         req.getRequestDispatcher(PagesUtil.ROOM).forward(req, resp);
     }

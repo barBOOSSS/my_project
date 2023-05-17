@@ -3,7 +3,7 @@ package by.pleshkov.database.dao;
 
 import by.pleshkov.database.connection.ConnectionPool;
 import by.pleshkov.database.constant.Role;
-import by.pleshkov.database.entity.User;
+import by.pleshkov.database.entity.UserEntity;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ public class UserDao {
     public static final String UPDATE = "UPDATE users SET name = ?, surname = ?, password = ?, email = ?, role = ?  WHERE id = ?";
     public static final String DELETE_BY_ID = "DELETE FROM users WHERE id = ?";
 
-    public Optional<User> create(User user) {
+    public Optional<UserEntity> create(UserEntity user) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getName());
@@ -44,12 +44,12 @@ public class UserDao {
         }
     }
 
-    public Optional<User> findByID(Long id) {
+    public Optional<UserEntity> findByID(Long id) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() ? Optional.of(User.builder()
+            return resultSet.next() ? Optional.of(UserEntity.builder()
                     .id(resultSet.getLong("id"))
                     .name(resultSet.getString("name"))
                     .surname(resultSet.getString("surname"))
@@ -63,13 +63,13 @@ public class UserDao {
         }
     }
 
-    public Optional<User> getByEmailAndPass(String email, String password) {
+    public Optional<UserEntity> getByEmailAndPass(String email, String password) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_EMAIL_PASS)) {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() ? Optional.of(User.builder()
+            return resultSet.next() ? Optional.of(UserEntity.builder()
                     .id(resultSet.getLong("id"))
                     .name(resultSet.getString("name"))
                     .surname(resultSet.getString("surname"))
@@ -83,7 +83,7 @@ public class UserDao {
         }
     }
 
-    public Optional<User> update(User user) {
+    public Optional<UserEntity> update(UserEntity user) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setString(1, user.getName());
@@ -112,13 +112,13 @@ public class UserDao {
         }
     }
 
-    public List<User> findAll() {
-        List<User> users = new ArrayList<>();
+    public List<UserEntity> findAll() {
+        List<UserEntity> users = new ArrayList<>();
         try (Connection connection = ConnectionPool.get();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
-                users.add(User.builder()
+                users.add(UserEntity.builder()
                         .id(resultSet.getLong("id"))
                         .name(resultSet.getString("name"))
                         .surname(resultSet.getString("surname"))

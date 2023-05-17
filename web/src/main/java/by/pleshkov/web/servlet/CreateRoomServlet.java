@@ -2,7 +2,7 @@ package by.pleshkov.web.servlet;
 
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
-import by.pleshkov.database.entity.Room;
+import by.pleshkov.database.entity.RoomEntity;
 import by.pleshkov.service.service.RoomService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -27,8 +27,8 @@ public class CreateRoomServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        Optional<Room> created = roomService.create(
-                Room.builder()
+        Optional<RoomEntity> created = roomService.create(
+                RoomEntity.builder()
                         .number(Integer.parseInt(req.getParameter("number")))
                         .places(Integer.parseInt(req.getParameter("places")))
                         .classRoom(ClassRoom.valueOf(req.getParameter("classRoom")))
@@ -41,7 +41,7 @@ public class CreateRoomServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, Room room) {
+    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, RoomEntity room) {
         req.setAttribute("room", room);
         req.getRequestDispatcher(PagesUtil.ROOM).forward(req, resp);
     }

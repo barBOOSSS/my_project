@@ -4,7 +4,7 @@ package by.pleshkov.database.dao;
 import by.pleshkov.database.connection.ConnectionPool;
 import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
-import by.pleshkov.database.entity.Order;
+import by.pleshkov.database.entity.OrderEntity;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ public class OrderDao {
     public static final String UPDATE = "UPDATE orders SET status_order = ?, solution = ? WHERE id = ?";
     public static final String DELETE_BY_ID = "DELETE FROM orders WHERE id = ?";
 
-    public Optional<Order> create(Order order) {
+    public Optional<OrderEntity> create(OrderEntity order) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, String.valueOf(order.getStatusOrder()));
@@ -41,12 +41,12 @@ public class OrderDao {
         }
     }
 
-    public Optional<Order> findByID(Long id) {
+    public Optional<OrderEntity> findByID(Long id) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() ? Optional.of(Order.builder()
+            return resultSet.next() ? Optional.of(OrderEntity.builder()
                     .id(resultSet.getLong("id"))
                     .statusOrder(StatusOrder.valueOf(resultSet.getString("status_order")))
                     .solution(Solution.valueOf(resultSet.getString("solution")))
@@ -57,7 +57,7 @@ public class OrderDao {
         }
     }
 
-    public Optional<Order> update(Order order) {
+    public Optional<OrderEntity> update(OrderEntity order) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setString(1, String.valueOf(order.getStatusOrder()));
@@ -83,13 +83,13 @@ public class OrderDao {
         }
     }
 
-    public List<Order> getAll() {
-        List<Order> orders = new ArrayList<>();
+    public List<OrderEntity> getAll() {
+        List<OrderEntity> orders = new ArrayList<>();
         try (Connection connection = ConnectionPool.get();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
-                orders.add(Order.builder()
+                orders.add(OrderEntity.builder()
                         .id(resultSet.getLong("id"))
                         .statusOrder(StatusOrder.valueOf(resultSet.getString("status_order")))
                         .solution(Solution.valueOf(resultSet.getString("solution")))

@@ -1,6 +1,6 @@
 package by.pleshkov.web.servlet;
 
-import by.pleshkov.database.entity.User;
+import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.service.service.UserService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void successLogin(HttpServletRequest req, HttpServletResponse resp, User user) {
+    private static void successLogin(HttpServletRequest req, HttpServletResponse resp, UserEntity user) {
         req.getSession().setAttribute("user", user);
         resp.sendRedirect("/main");
     }

@@ -1,7 +1,7 @@
 package by.pleshkov.web.servlet;
 
 import by.pleshkov.database.constant.Role;
-import by.pleshkov.database.entity.User;
+import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.service.service.UserService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
@@ -29,13 +29,13 @@ public class EditUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String id = req.getParameter("id");
-        User user = userService.getById(Long.valueOf(id));
+        UserEntity user = userService.getById(Long.valueOf(id));
         user.setName(req.getParameter("name"));
         user.setSurname(req.getParameter("surname"));
         user.setPassword(req.getParameter("password"));
         user.setEmail(req.getParameter("email"));
         user.setRole(Role.valueOf(req.getParameter("role")));
-        Optional<User> update = userService.update(user);
+        Optional<UserEntity> update = userService.update(user);
         update.ifPresentOrElse(
                 u -> redirectToRoomPage(req, resp, user),
                 () -> onFailedCreation(req, resp)
@@ -43,7 +43,7 @@ public class EditUserServlet extends HttpServlet {
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, User user) {
+    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, UserEntity user) {
         req.setAttribute("user", user);
         req.getRequestDispatcher(PagesUtil.USER).forward(req, resp);
     }

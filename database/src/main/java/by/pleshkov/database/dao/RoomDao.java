@@ -5,7 +5,7 @@ import by.pleshkov.database.connection.ConnectionPool;
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
 import by.pleshkov.database.dto.RoomFilter;
-import by.pleshkov.database.entity.Room;
+import by.pleshkov.database.entity.RoomEntity;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ public class RoomDao {
     public static final String SELECT_BY = "SELECT * FROM rooms WHERE places < ? AND class_room = ? AND status_room = ? LIMIT ? OFFSET ?";
 
 
-    public Optional<Room> create(Room room) {
+    public Optional<RoomEntity> create(RoomEntity room) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, room.getNumber());
@@ -46,12 +46,12 @@ public class RoomDao {
         }
     }
 
-    public Optional<Room> findByID(Long id) {
+    public Optional<RoomEntity> findByID(Long id) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() ? Optional.of(Room.builder()
+            return resultSet.next() ? Optional.of(RoomEntity.builder()
                     .id(resultSet.getLong("id"))
                     .number(resultSet.getInt("number"))
                     .places(resultSet.getInt("places"))
@@ -64,8 +64,8 @@ public class RoomDao {
         }
     }
 
-    public List<Room> findByFilter(RoomFilter filter) {
-        List<Room> rooms = new ArrayList<>();
+    public List<RoomEntity> findByFilter(RoomFilter filter) {
+        List<RoomEntity> rooms = new ArrayList<>();
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY)) {
             preparedStatement.setInt(1, filter.places());
@@ -75,7 +75,7 @@ public class RoomDao {
             preparedStatement.setInt(5, filter.limit() * (filter.page() - 1));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                rooms.add(Room.builder()
+                rooms.add(RoomEntity.builder()
                         .id(resultSet.getLong("id"))
                         .number(resultSet.getInt("number"))
                         .places(resultSet.getInt("places"))
@@ -89,7 +89,7 @@ public class RoomDao {
         return rooms;
     }
 
-    public Optional<Room> update(Room room) {
+    public Optional<RoomEntity> update(RoomEntity room) {
         try (Connection connection = ConnectionPool.get();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setInt(1, room.getNumber());
@@ -117,13 +117,13 @@ public class RoomDao {
         }
     }
 
-    public List<Room> findAll() {
-        List<Room> rooms = new ArrayList<>();
+    public List<RoomEntity> findAll() {
+        List<RoomEntity> rooms = new ArrayList<>();
         try (Connection connection = ConnectionPool.get();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
-                rooms.add(Room.builder()
+                rooms.add(RoomEntity.builder()
                         .id(resultSet.getLong("id"))
                         .number(resultSet.getInt("number"))
                         .places(resultSet.getInt("places"))

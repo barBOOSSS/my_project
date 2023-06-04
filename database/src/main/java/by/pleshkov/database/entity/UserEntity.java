@@ -1,18 +1,39 @@
 package by.pleshkov.database.entity;
 
 import by.pleshkov.database.constant.Role;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
-@ToString(exclude = "orders")
-@EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@ToString(exclude = {"orders", "rooms", "passport"})
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Table(name = "users")
 public class UserEntity extends CreatableEntity<Long> {
@@ -38,20 +59,28 @@ public class UserEntity extends CreatableEntity<Long> {
     private Role role;
 
     @Embedded
-    @AttributeOverride(name = "tel", column = @Column(name = "tel"))
-    @AttributeOverride(name = "address", column = @Column(name = "address"))
-    private Contact contact;
-
+    @AttributeOverride(name = "city", column = @Column(name = "city"))
+    @AttributeOverride(name = "street", column = @Column(name = "street"))
+    @AttributeOverride(name = "building", column = @Column(name = "building"))
+    @AttributeOverride(name = "flat", column = @Column(name = "flat"))
+    private Address address;
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderEntity> orders = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<RoomEntity> roomEntities = new ArrayList<>();
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private PassportEntity passport;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(name = "room_user",
+            joinColumns = {
+                    @JoinColumn(name = "user_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "room_id")
+            })
+    private List<RoomEntity> rooms = new ArrayList<>();
 
     public void addOrder(OrderEntity order) {
         this.orders.add(order);

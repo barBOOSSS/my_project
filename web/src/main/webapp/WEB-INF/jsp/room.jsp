@@ -21,6 +21,7 @@
 <h2>Статус номера: ${room.statusRoom}</h2>
 
 <form action="${pageContext.request.contextPath}/room-edit" method="get">
+    <input type="hidden" name="id" value="${room.id}">
     <input type="submit" value="Изменить">
 </form>
 

@@ -4,6 +4,7 @@ import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
 import by.pleshkov.database.entity.OrderEntity;
 import by.pleshkov.service.service.OrderService;
+import by.pleshkov.service.service.UserService;
 import by.pleshkov.web.util.PagesUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class CreateOrderServlet extends HttpServlet {
 
     private final OrderService orderService = OrderService.getInstance();
+    private final UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,6 +31,8 @@ public class CreateOrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         Optional<OrderEntity> created = orderService.save(
                 OrderEntity.builder()
+                        .user(userService.getById(Long.valueOf(req.getParameter("user"))))
+                        .price(Integer.valueOf(req.getParameter("price")))
                         .statusOrder(StatusOrder.valueOf(req.getParameter("statusOrder")))
                         .solution(Solution.valueOf(req.getParameter("solution")))
                         .build());

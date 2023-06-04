@@ -21,9 +21,8 @@
 
 <c:forEach var="order" items="${requestScope.orders}">
     <h2>ID заказа: ${order.id}</h2>
-    <h2>Пользователь: ${order.user}</h2>
-    <h2>На сколько мест номер: ${order.places}</h2>
-    <h2>Класс номера: ${order.classRoom}</h2>
+    <h2>Пользователь: ${order.user.name} ${order.user.surname}</h2>
+    <h2>Сумма заказа: ${order.price}</h2>
     <h2>Статус заказа: ${order.statusOrder}</h2>
     <h2>Решение: ${order.solution} </h2>
     <h2><a href=${pageContext.request.contextPath}/orders?id=${order.id}>Показать заказ</a></h2>

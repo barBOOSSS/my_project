@@ -27,6 +27,21 @@
     <label for="surnameId">Фамилия:</label><br>
     <input type="text" id="surnameId" name="surname"><br>
 
+    <label for="cityId">Город:</label><br>
+    <input type="text" id="cityId" name="city"><br>
+
+    <label for="streetId">Улица:</label><br>
+    <input type="text" id="streetId" name="street"><br>
+
+    <label for="buildingId">Номер дома:</label><br>
+    <input type="text" id="buildingId" name="building"><br>
+
+    <label for="flatId">Номер квартиры:</label><br>
+    <input type="text" id="flatId" name="flat"><br>
+
+    <label for="passportId">Номер пасспорта:</label><br>
+    <input type="text" id="passportId" name="passport"><br>
+
     <input type="submit" value="Registration">
 </form>
 

@@ -2,17 +2,35 @@ package by.pleshkov.database.entity;
 
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
+import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
+@ToString(exclude = "users")
 @EqualsAndHashCode(of = "id", callSuper = false)
-@Builder
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Entity
 @Table(name = "rooms")
-public class RoomEntity extends CreatableEntity<Long> {
+public class RoomEntity implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +53,17 @@ public class RoomEntity extends CreatableEntity<Long> {
     @Column(name = "status_room", length = 15, nullable = false)
     private StatusRoom statusRoom;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @Builder.Default
+    @ManyToMany(mappedBy = "rooms")
+    private List<UserEntity> users = new ArrayList<>();
+
+    public void addUser(UserEntity user) {
+        this.getUsers().add(user);
+        user.getRooms().add(this);
+    }
+
+    public void removeUser(UserEntity user) {
+        this.getUsers().remove(user);
+        user.getRooms().remove(this);
+    }
 }

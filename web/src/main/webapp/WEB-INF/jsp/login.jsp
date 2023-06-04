@@ -24,6 +24,10 @@
     <input type="submit" value="Login">
 </form>
 
+<form action="${pageContext.request.contextPath}/registration" method="get">
+    <input type="submit" value="Registration">
+</form>
+
 <c:if test="${ param.error == true}">
 Неправильный email или пароль
 </c:if>

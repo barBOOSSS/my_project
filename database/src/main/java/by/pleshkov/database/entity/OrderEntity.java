@@ -1,18 +1,28 @@
 package by.pleshkov.database.entity;
 
-import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
-import jakarta.persistence.*;
-import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 
 @Data
-//@ToString(exclude = "rooms")
-//@EqualsAndHashCode(exclude = "rooms", callSuper = false)
-@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(callSuper = false)
 @Builder
 @Entity
 @NoArgsConstructor
@@ -24,19 +34,20 @@ public class OrderEntity extends CreatableEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-//    @Builder.Default
-//    @OneToMany(mappedBy = "order")
-//    private List<RoomEntity> rooms = new ArrayList<>();
+    @Column(name = "price", nullable = false)
+    private Integer price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status_order", nullable = false)
     private StatusOrder statusOrder;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "solution", nullable = false)
     private Solution solution;
+
+
 }

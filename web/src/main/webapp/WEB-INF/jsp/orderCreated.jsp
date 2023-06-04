@@ -15,6 +15,13 @@
 <%@ include file="header.jsp" %>
 
 <form action="${pageContext.request.contextPath}/order-created" method="post">
+
+  <label for="userId">Id пользователя:</label><br>
+  <input type="text" id="userId" name="user"><br><br>
+
+  <label for="pricedId">Сумма заказа:</label><br>
+  <input type="text" id="pricedId" name="price"><br><br>
+
   <label for="statusOrderId">Статус заказа:</label><br>
   <select name="statusOrder" id="statusOrderId">
     <option value="NEW">NEW</option>

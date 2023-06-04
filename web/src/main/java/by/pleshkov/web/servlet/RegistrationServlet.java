@@ -1,6 +1,8 @@
 package by.pleshkov.web.servlet;
 
 import by.pleshkov.database.constant.Role;
+import by.pleshkov.database.entity.Address;
+import by.pleshkov.database.entity.PassportEntity;
 import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.service.service.UserService;
 import by.pleshkov.web.util.PagesUtil;
@@ -26,14 +28,23 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Optional<UserEntity> saved = userService.save(
-                UserEntity.builder()
+       UserEntity newUser = UserEntity.builder()
                         .name(req.getParameter("name"))
                         .surname(req.getParameter("surname"))
                         .email(req.getParameter("email"))
                         .password(req.getParameter("password"))
                         .role(Role.USER)
-                        .build());
+                        .address(Address.builder()
+                                .city(req.getParameter("city"))
+                                .street(req.getParameter("street"))
+                                .building(req.getParameter("building"))
+                                .flat(req.getParameter("flat"))
+                                .build())
+                        .build();
+        newUser.setPassport(PassportEntity.builder()
+                       .number(req.getParameter("passport"))
+               .build());
+       Optional<UserEntity> saved = userService.save(newUser);
         saved.ifPresentOrElse(
                 user -> redirectToLoginPage(req, resp),
                 () -> onFailedCreation(req, resp)

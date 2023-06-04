@@ -41,6 +41,10 @@
         <input type="text" title="" id="limit" name="limit" value="${param.limit}">
     </div>
     <div>
+        <label for="user">Имя пользователя:</label>
+        <input id="user" type="text" title="" name="user" value="${param.userName}">
+    </div>
+    <div>
         <label for="places">Количество мест в комнате:</label>
         <input id="places" type="text" title="" name="places" value="${param.places}">
     </div>

@@ -31,6 +31,7 @@ public class EditOrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String id = req.getParameter("id");
         OrderEntity order = orderService.getById(Long.valueOf(id));
+        order.setPrice(Integer.valueOf(req.getParameter("price")));
         order.setStatusOrder(StatusOrder.valueOf(req.getParameter("statusOrder")));
         order.setSolution(Solution.valueOf(req.getParameter("solution")));
         Optional<OrderEntity> update = orderService.update(order);

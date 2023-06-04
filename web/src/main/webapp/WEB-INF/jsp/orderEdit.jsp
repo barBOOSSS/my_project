@@ -15,13 +15,15 @@
 <%@ include file="header.jsp" %>
 
 <h2>ID заказа: ${order.id}</h2>
-<h2>Пользователь: ${order.user}</h2>
-<h2>На сколько мест номер: ${order.places}</h2>
-<h2>Класс номера: ${order.classRoom}</h2>
+<h2>Пользователь: ${order.user.name} ${order.user.surname}</h2>
+<h2>Сумма заказа: ${order.price}</h2>
 <h2>Статус заказа: ${order.statusOrder}</h2>
 <h2>Решение: ${order.solution} </h2>
 
 <form action="${pageContext.request.contextPath}/order-edit" method="post">
+
+    <label for="pricedId">Сумма заказа:</label><br>
+    <input type="text" id="pricedId" name="price"><br><br>
 
     <label for="statusOrderId">Статус заказа:</label><br>
     <select name="statusOrder" id="statusOrderId">

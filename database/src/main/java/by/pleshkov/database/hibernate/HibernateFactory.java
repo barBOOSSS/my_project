@@ -14,7 +14,6 @@ public class HibernateFactory {
 
     private SessionFactory sessionFactory;
 
-
     {
         sessionFactory = new Configuration().configure().buildSessionFactory();
     }

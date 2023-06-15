@@ -1,7 +1,11 @@
 package by.pleshkov.database;
 
-import by.pleshkov.database.constant.*;
-import by.pleshkov.database.dao.OrderDao;
+
+import by.pleshkov.database.constant.ClassRoom;
+import by.pleshkov.database.constant.Role;
+import by.pleshkov.database.constant.StatusOrder;
+import by.pleshkov.database.constant.StatusRoom;
+import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.entity.OrderEntity;
 import by.pleshkov.database.entity.RoomEntity;
 import by.pleshkov.database.entity.UserEntity;
@@ -28,8 +32,6 @@ public class TestDataImporter {
                 .password(String.valueOf(222))
                 .role(Role.USER)
                 .build();
-
-
 
         RoomEntity room1 = RoomEntity.builder()
                 .number(1)
@@ -80,8 +82,6 @@ public class TestDataImporter {
                 .statusOrder(StatusOrder.CLOSE)
                 .solution(Solution.UNPROCESSED)
                 .build();
-
-
 
         session.persist(pit);
         session.persist(vin);

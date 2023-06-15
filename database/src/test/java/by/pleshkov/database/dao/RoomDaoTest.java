@@ -1,6 +1,5 @@
 package by.pleshkov.database.dao;
 
-import by.pleshkov.database.TestDataImporter;
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
 import by.pleshkov.database.dto.RoomDto;
@@ -9,7 +8,6 @@ import by.pleshkov.database.entity.RoomEntity;
 import by.pleshkov.database.hibernate.HibernateFactory;
 import lombok.Cleanup;
 import org.hibernate.Session;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -26,15 +24,6 @@ public class RoomDaoTest {
 
     private static final RoomDao roomDao = RoomDao.getInstance();
     private static final HibernateFactory sessionFactory = HibernateFactory.getInstance();
-
-    @BeforeAll
-    static void beforeAll() {
-        try (Session session = sessionFactory.getSession()) {
-            var transaction = session.beginTransaction();
-            TestDataImporter.importTestData(session);
-            transaction.commit();
-        }
-    }
 
     @Test
     @Order(1)

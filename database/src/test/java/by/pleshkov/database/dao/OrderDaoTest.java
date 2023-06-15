@@ -1,6 +1,5 @@
 package by.pleshkov.database.dao;
 
-import by.pleshkov.database.TestDataImporter;
 import by.pleshkov.database.constant.Solution;
 import by.pleshkov.database.constant.StatusOrder;
 import by.pleshkov.database.entity.OrderEntity;
@@ -8,7 +7,6 @@ import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.database.hibernate.HibernateFactory;
 import lombok.Cleanup;
 import org.hibernate.Session;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -27,15 +25,6 @@ public class OrderDaoTest {
     private static final OrderDao orderDao = OrderDao.getInstance();
     private static final UserDao userDao = UserDao.getInstance();
     private static final HibernateFactory sessionFactory = HibernateFactory.getInstance();
-
-    @BeforeAll
-    static void beforeAll() {
-        try (Session session = sessionFactory.getSession()) {
-            var transaction = session.beginTransaction();
-            TestDataImporter.importTestData(session);
-            transaction.commit();
-        }
-    }
 
     @Test
     @Order(1)

@@ -1,6 +1,6 @@
 CREATE DATABASE hotel_db;
 
-DROP TABLE users;
+DROP TABLE IF EXISTS users;
 DROP TABLE rooms;
 DROP TABLE orders;
 DROP TABLE passport;

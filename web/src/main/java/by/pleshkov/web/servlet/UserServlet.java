@@ -8,16 +8,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-@WebServlet("/users")
-public class UserServlet extends HttpServlet {
 
-    private final UserService userService = UserService.getInstance();
+@WebServlet("/users")
+@Controller
+@RequiredArgsConstructor
+public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        UserService userService = context.getBean(UserService.class);
         String id = req.getParameter("id");
         if (id == null) {
             req.setAttribute("users", userService.getAll());
@@ -30,6 +36,8 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        UserService userService = context.getBean(UserService.class);
         String id = req.getParameter("id");
         if (userService.delete(Long.valueOf(id))) {
             redirectToUsersPage(req, resp);

@@ -11,18 +11,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet("/room-edit")
+@Controller
+@RequiredArgsConstructor
 public class EditRoomServlet extends HttpServlet {
-
-    private final RoomService roomService = RoomService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        RoomService roomService = context.getBean(RoomService.class);
         String id = req.getParameter("id");
         req.setAttribute("room", roomService.getById(Long.valueOf(id)));
         req.getRequestDispatcher(PagesUtil.ROOM_EDIT).forward(req, resp);
@@ -30,17 +34,19 @@ public class EditRoomServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        RoomService roomService = context.getBean(RoomService.class);
         String id = req.getParameter("id");
         RoomEntity room = roomService.getById(Long.valueOf(id));
         room.setNumber(Integer.parseInt(req.getParameter("number")));
         room.setPlaces(Integer.parseInt(req.getParameter("places")));
         room.setClassRoom(ClassRoom.valueOf(req.getParameter("classRoom")));
         room.setStatusRoom(StatusRoom.valueOf(req.getParameter("statusRoom")));
-        Optional<RoomEntity> update = roomService.update(room);
-        update.ifPresentOrElse(
-                r -> redirectToRoomPage(req, resp, room),
-                () -> onFailedCreation(req, resp)
-        );
+        if (roomService.save(room) != null) {
+            redirectToRoomPage(req, resp, room);
+        } else {
+            onFailedCreation(req, resp);
+        }
     }
 
     @SneakyThrows

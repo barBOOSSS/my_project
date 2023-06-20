@@ -21,12 +21,14 @@
     <label for="placesId">Количество мест:</label><br>
     <input type="text" id="placesId" name="places"><br><br>
 
+    <label for="pricedId">Стоимость номера в сутки:</label><br>
+    <input type="text" id="pricedId" name="price"><br><br>
+
     <label for="classRoomId">Класс комнаты:</label><br>
     <select name="classRoom" id="classRoomId">
         <option value="STANDARD">STANDARD</option>
         <option value="SUITE">SUITE</option>
     </select>
-
     <input type="submit" value="Создать">
 </form>
 

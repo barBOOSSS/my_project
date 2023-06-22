@@ -18,9 +18,6 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
-@WebServlet("/order-created")
-@Controller
-@RequiredArgsConstructor
 public class CreateOrderServlet extends HttpServlet {
 
     @Override

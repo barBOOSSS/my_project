@@ -15,9 +15,6 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
-@WebServlet("/users")
-@Controller
-@RequiredArgsConstructor
 public class UserServlet extends HttpServlet {
 
     @Override

@@ -6,11 +6,7 @@ import by.pleshkov.database.entity.RoomEntity_;
 import by.pleshkov.database.entity.UserEntity_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +25,7 @@ public class RoomRepositoryExtensionImpl implements RoomRepositoryExtension {
         CriteriaQuery<RoomEntity> query = cb.createQuery(RoomEntity.class);
         Root<RoomEntity> roomRoot = query.from(RoomEntity.class);
         query.select(roomRoot);
-        Join<Object, Object> users = roomRoot.join(RoomEntity_.USERS);
+        Join<Object, Object> users = roomRoot.join(RoomEntity_.USERS, JoinType.LEFT);
         query.where(collectPredicates(filter, cb, roomRoot, users).toArray(Predicate[]::new));
         return entityManager.createQuery(query)
                 .setMaxResults(filter.getLimit())
@@ -48,7 +44,7 @@ public class RoomRepositoryExtensionImpl implements RoomRepositoryExtension {
         if (filter.getStatusRoom() != null) {
             predicates.add(cb.equal(roomRoot.get(RoomEntity_.STATUS_ROOM), filter.getStatusRoom()));
         }
-        if (filter.getUserName() != null) {
+        if (filter.getUserName() != null && !filter.getUserName().isBlank()) {
             predicates.add(cb.like(users.get(UserEntity_.NAME), "%" + filter.getUserName() + "%"));
         }
         return predicates;

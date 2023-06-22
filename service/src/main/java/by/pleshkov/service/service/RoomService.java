@@ -3,13 +3,17 @@ package by.pleshkov.service.service;
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
 import by.pleshkov.database.dto.RoomFilter;
+import by.pleshkov.database.dto.RoomReadDto;
 import by.pleshkov.database.entity.RoomEntity;
+import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.database.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +41,22 @@ public class RoomService {
                         .build());
     }
 
-    public List<RoomEntity> getAll() {
-        return roomRepository.findAll();
+    public List<RoomReadDto> getAll() {
+//        return roomRepository.findAll();
+        return roomRepository.findAll()
+                .stream()
+                .map(room ->
+                        new RoomReadDto(
+                                room.getNumber(),
+                                room.getPlaces(),
+                                room.getClassRoom(),
+                                room.getPrice(),
+                                room.getStatusRoom(),
+                                room.getUsers().stream()
+                                        .map(UserEntity::getName)
+                                        .toList())
+                )
+                .toList();
     }
 
     public boolean delete(Long id) {

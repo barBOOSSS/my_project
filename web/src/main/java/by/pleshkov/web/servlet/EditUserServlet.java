@@ -16,9 +16,6 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
-@WebServlet("/user-edit")
-@Controller
-@RequiredArgsConstructor
 public class EditUserServlet extends HttpServlet {
 
     @Override

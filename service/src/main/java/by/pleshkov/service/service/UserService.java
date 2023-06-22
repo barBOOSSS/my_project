@@ -1,5 +1,6 @@
 package by.pleshkov.service.service;
 
+import by.pleshkov.database.dto.LoginDto;
 import by.pleshkov.database.entity.UserEntity;
 import by.pleshkov.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class UserService {
                         .build());
     }
 
-    public Optional<UserEntity> getBy(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
+    public Optional<UserEntity> getBy(LoginDto login) {
+        return userRepository.findByEmailAndPassword(login.email(), login.password());
     }
 
     public boolean delete(Long id) {

@@ -16,7 +16,7 @@
 
 <h1> ${sessionScope.user.name}: ${sessionScope.user.role} </h1>
 
-<form action="${pageContext.request.contextPath}/room-created" method="get">
+<form action="${pageContext.request.contextPath}/rooms/create" method="get">
     <input type="submit" value="Создать комнату">
 </form>
 
@@ -26,31 +26,32 @@
     <h2>На сколько мест номер: ${room.places}</h2>
     <h2>Класс номера: ${room.classRoom}</h2>
     <h2>Статус номера: ${room.statusRoom}</h2>
-    <h2><a href=${pageContext.request.contextPath}/rooms?id=${room.id}>Показать номер</a></h2>
+    <h2><a href=${pageContext.request.contextPath}/rooms/${room.id}>Показать номер</a></h2>
 </c:forEach>
 
 
 <form action="${pageContext.request.contextPath}/rooms" method="get">
 
     <div>
-        <label for="page">Номер страницы:</label>
-        <input type="text" title="" id="page" name="page" value="${param.page}">
+        <label for="pageId">Номер страницы:</label>
+        <input type="text" id="pageId" name="page">
     </div>
     <div>
-        <label for="limit">Количество на странице:</label>
-        <input type="text" title="" id="limit" name="limit" value="${param.limit}">
+        <label for="limitId">Количество на странице:</label>
+        <input type="text" id="limitId" name="limit">
     </div>
     <div>
-        <label for="user">Имя пользователя:</label>
-        <input id="user" type="text" title="" name="user" value="${param.userName}">
+        <label for="userNameId">Имя пользователя:</label>
+        <input type="text" id="userNameId" name="userName">
     </div>
     <div>
-        <label for="places">Количество мест в комнате:</label>
-        <input id="places" type="text" title="" name="places" value="${param.places}">
+        <label for="placesId">Количество мест в комнате:</label>
+        <input  type="text" id="placesId" name="places">
     </div>
     <div>
         <label for="classRoomId">Класс комнаты:</label><br>
         <select name="classRoom" id="classRoomId">
+            <option value=""></option>
             <option value="STANDARD">STANDARD</option>
             <option value="SUITE">SUITE</option>
         </select>
@@ -58,6 +59,7 @@
     <div>
         <label for="statusRoomId">Статус комнаты:</label><br>
         <select name="statusRoom" id="statusRoomId">
+            <option value=""></option>
             <option value="FREE">FREE</option>
             <option value="NOT_FREE">NOT FREE</option>
         </select>

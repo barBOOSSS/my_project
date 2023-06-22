@@ -18,9 +18,6 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
-@WebServlet("/registration")
-@Controller
-@RequiredArgsConstructor
 public class RegistrationServlet extends HttpServlet {
 
     @Override

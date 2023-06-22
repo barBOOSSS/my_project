@@ -18,8 +18,6 @@ import org.springframework.stereotype.Controller;
 import java.io.IOException;
 
 @WebServlet("/room-created")
-@Controller
-@RequiredArgsConstructor
 public class CreateRoomServlet extends HttpServlet {
 
     @Override

@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReadDto {
-    Long id;
-    String email;
-    String name;
-    String surname;
-    Role role;
-    String city;
-    String street;
-    String building;
-    String flat;
-    String passport;
+    private Long id;
+    private String email;
+    private String name;
+    private String surname;
+    private Role role;
+    private String city;
+    private String street;
+    private String building;
+    private String flat;
+    private String passport;
 }

@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomReadDto {
-    Long id;
-    Integer number;
-    Integer places;
-    ClassRoom classRoom;
-    Integer price;
-    StatusRoom statusRoom;
-    List<String> users;
+    private Long id;
+    private Integer number;
+    private Integer places;
+    private ClassRoom classRoom;
+    private Integer price;
+    private StatusRoom statusRoom;
+    private List<String> users;
 }
 

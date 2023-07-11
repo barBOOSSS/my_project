@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationDto {
-    String email;
-    String password;
-    String name;
-    String surname;
-    Role role;
-    String city;
-    String street;
-    String building;
-    String flat;
-    String passport;
+    private String email;
+    private String password;
+    private String name;
+    private String surname;
+    private Role role;
+    private String city;
+    private String street;
+    private String building;
+    private String flat;
+    private String passport;
 }
 

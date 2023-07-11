@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderReadDto {
-    Long id;
-    Integer price;
-    StatusOrder statusOrder;
-    Solution solution;
-    String user;
+    private Long id;
+    private Integer price;
+    private StatusOrder statusOrder;
+    private Solution solution;
+    private String user;
 }

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCreationDto {
-    Integer price;
-    StatusOrder statusOrder;
-    Solution solution;
-    Long userId;
+    private Integer price;
+    private StatusOrder statusOrder;
+    private Solution solution;
+    private Long userId;
 }

@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-import static by.pleshkov.web.util.PagesUtil.*;
+import static by.pleshkov.web.util.PagesUtil.LOGIN;
+import static by.pleshkov.web.util.PagesUtil.REGISTRATION;
+import static by.pleshkov.web.util.PagesUtil.ROOMS;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration

@@ -14,10 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomCreationDto {
-    Integer number;
-    Integer places;
-    ClassRoom classRoom;
-    Integer price;
-    StatusRoom statusRoom;
-    List<Long> usersIds = new ArrayList<>();
+    private Integer number;
+    private Integer places;
+    private ClassRoom classRoom;
+    private Integer price;
+    private StatusRoom statusRoom;
+    private List<Long> usersIds = new ArrayList<>();
 }

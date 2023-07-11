@@ -14,10 +14,10 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<form action="${pageContext.request.contextPath}/order-created" method="post">
+<form action="${pageContext.request.contextPath}/orders/create" method="post">
 
   <label for="userId">Id пользователя:</label><br>
-  <input type="text" id="userId" name="user"><br><br>
+  <input type="text" id="userId" name="userId"><br><br>
 
   <label for="pricedId">Сумма заказа:</label><br>
   <input type="text" id="pricedId" name="price"><br><br>

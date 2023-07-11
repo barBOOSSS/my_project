@@ -14,7 +14,7 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.user.name}: ${sessionScope.user.role} </h1>
+<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.user.name} ${sessionScope.user.role} </h1>
 
 <form action="${pageContext.request.contextPath}/rooms/create" method="get">
     <input type="submit" value="Создать комнату">

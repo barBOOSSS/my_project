@@ -15,22 +15,22 @@
 <%@ include file="header.jsp" %>
 
 <h2>ID заказа: ${order.id}</h2>
-<h2>Пользователь: ${order.user.name} ${order.user.surname}</h2>
+<h2>Пользователь: ${order.user}</h2>
 <h2>Сумма заказа: ${order.price}</h2>
 <h2>Статус заказа: ${order.statusOrder}</h2>
 <h2>Решение: ${order.solution} </h2>
 
-<form action="${pageContext.request.contextPath}/order-edit" method="get">
-    <input type="hidden" name="id" value="${order.id}">
+<form action="${pageContext.request.contextPath}/orders/update/${order.id}" method="get">
+<%--    <input type="hidden" name="id" value="${order.id}">--%>
     <input type="submit" value="Изменить">
 </form>
 
-<form action="${pageContext.request.contextPath}/orders" method="post">
-    <input type="hidden" name="id" value="${order.id}">
+<form action="${pageContext.request.contextPath}/orders/${order.id}/delete" method="post">
+<%--    <input type="hidden" name="id" value="${order.id}">--%>
     <input type="submit" value="Удалить">
 </form>
 
-<c:if test="${ param.error == true}">
+<c:if test="${param.error == true}">
     Заказ не удален
 </c:if>
 

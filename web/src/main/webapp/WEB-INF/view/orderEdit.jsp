@@ -15,15 +15,15 @@
 <%@ include file="header.jsp" %>
 
 <h2>ID заказа: ${order.id}</h2>
-<h2>Пользователь: ${order.user.name} ${order.user.surname}</h2>
+<h2>Пользователь: ${order.user}</h2>
 <h2>Сумма заказа: ${order.price}</h2>
 <h2>Статус заказа: ${order.statusOrder}</h2>
 <h2>Решение: ${order.solution} </h2>
 
-<form action="${pageContext.request.contextPath}/order-edit" method="post">
+<form action="${pageContext.request.contextPath}/orders/update/${order.id}" method="post">
 
     <label for="pricedId">Сумма заказа:</label><br>
-    <input type="text" id="pricedId" name="price"><br><br>
+    <input type="text" id="pricedId" name="price" value="${order.price}"><br>
 
     <label for="statusOrderId">Статус заказа:</label><br>
     <select name="statusOrder" id="statusOrderId">
@@ -38,11 +38,10 @@
         <option value="UNPROCESSED">UNPROCESSED</option>
     </select>
 
-    <input type="hidden" name="id" value="${order.id}">
     <input type="submit" value="Изменить">
 </form>
 
-<c:if test="${ param.error == true}">
+<c:if test="${param.error == true}">
     Заказ не изменен
 </c:if>
 

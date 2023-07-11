@@ -14,18 +14,18 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.user.name}: ${sessionScope.user.role} </h1>
+<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.user.role} </h1>
 
-<form action="${pageContext.request.contextPath}/order-created" method="get">
+<form action="${pageContext.request.contextPath}/orders/create" method="get">
     <input type="submit" value="Создать заказ">
 
 <c:forEach var="order" items="${requestScope.orders}">
     <h2>ID заказа: ${order.id}</h2>
-    <h2>Пользователь: ${order.user.name} ${order.user.surname}</h2>
+    <h2>Пользователь: ${order.user}</h2>
     <h2>Сумма заказа: ${order.price}</h2>
     <h2>Статус заказа: ${order.statusOrder}</h2>
     <h2>Решение: ${order.solution} </h2>
-    <h2><a href=${pageContext.request.contextPath}/orders?id=${order.id}>Показать заказ</a></h2>
+    <h2><a href=${pageContext.request.contextPath}/orders/${order.id}>Показать заказ</a></h2>
 </c:forEach>
 
 <%@ include file="footer.jsp" %>

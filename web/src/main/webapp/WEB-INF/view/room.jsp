@@ -17,23 +17,24 @@
 <h2>ID комнаты: ${room.id}</h2>
 <h2>Номер комнаты: ${room.number}</h2>
 <h2>Количество мест в номере: ${room.places}</h2>
+<h2>Стоимость номера: ${room.price}</h2>
 <h2>Класс номера: ${room.classRoom}</h2>
 <h2>Статус номера: ${room.statusRoom}</h2>
 
-<form action="${pageContext.request.contextPath}/room-edit" method="get">
-    <input type="hidden" name="id" value="${room.id}">
-    <input type="submit" value="Изменить">
-</form>
+<sec:authorize access="hasAuthority('ADMIN') or hasAuthority('MANAGER')">
+    <form action="${pageContext.request.contextPath}/rooms/update/${room.id}" method="get">
+        <input type="submit" value="Изменить">
+    </form>
 
-<form action="${pageContext.request.contextPath}/rooms" method="post">
-    <input type="hidden" name="id" value="${room.id}">
+<form action="${pageContext.request.contextPath}/rooms/${room.id}/delete" method="post">
     <input type="submit" value="Удалить">
 </form>
+</sec:authorize>
 
-    <c:if test="${ param.error == true}">
-    Комната не удалена
-    </c:if>
+<c:if test="${param.error == true}">
+    Комната не быда удалена
+</c:if>
 
-    <%@ include file="footer.jsp" %>
+<%@ include file="footer.jsp" %>
 </body>
 </html>

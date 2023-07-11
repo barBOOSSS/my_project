@@ -11,16 +11,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet("/order-created")
+@Controller
+@RequiredArgsConstructor
 public class CreateOrderServlet extends HttpServlet {
-
-    private final OrderService orderService = OrderService.getInstance();
-    private final UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,21 +30,24 @@ public class CreateOrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        Optional<OrderEntity> created = orderService.save(
-                OrderEntity.builder()
-                        .user(userService.getById(Long.valueOf(req.getParameter("user"))))
-                        .price(Integer.valueOf(req.getParameter("price")))
-                        .statusOrder(StatusOrder.valueOf(req.getParameter("statusOrder")))
-                        .solution(Solution.valueOf(req.getParameter("solution")))
-                        .build());
-        created.ifPresentOrElse(
-                order -> redirectToRoomPage(req, resp, order),
-                () -> onFailedCreation(req, resp)
-        );
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        OrderService orderService = context.getBean(OrderService.class);
+        UserService userService = context.getBean(UserService.class);
+        OrderEntity newOrder = OrderEntity.builder()
+                .user(userService.getById(Long.valueOf(req.getParameter("user"))))
+                .price(Integer.valueOf(req.getParameter("price")))
+                .statusOrder(StatusOrder.valueOf(req.getParameter("statusOrder")))
+                .solution(Solution.valueOf(req.getParameter("solution")))
+                .build();
+        if (orderService.save(newOrder) != null) {
+            redirectToOrderPage(req, resp, newOrder);
+        } else {
+            onFailedCreation(req, resp);
+        }
     }
 
     @SneakyThrows
-    private static void redirectToRoomPage(HttpServletRequest req, HttpServletResponse resp, OrderEntity order) {
+    private static void redirectToOrderPage(HttpServletRequest req, HttpServletResponse resp, OrderEntity order) {
         req.setAttribute("order", order);
         req.getRequestDispatcher(PagesUtil.ORDER).forward(req, resp);
     }

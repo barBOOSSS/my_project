@@ -1,93 +1,48 @@
 package by.pleshkov.service.service;
 
-
-import by.pleshkov.database.dao.RoomDao;
+import by.pleshkov.database.constant.ClassRoom;
+import by.pleshkov.database.constant.StatusRoom;
 import by.pleshkov.database.dto.RoomFilter;
 import by.pleshkov.database.entity.RoomEntity;
-import by.pleshkov.database.hibernate.HibernateFactory;
-import lombok.NoArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.pleshkov.database.repository.RoomRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
+@Service
+@RequiredArgsConstructor
+@Transactional
 public class RoomService {
-    private static final RoomService INSTANCE = new RoomService();
-    private final RoomDao roomDao = RoomDao.getInstance();
-    private final HibernateFactory hibernateFactory = HibernateFactory.getInstance();
+
+    private final RoomRepository roomRepository;
 
     public List<RoomEntity> getFindByFilter(RoomFilter filter) {
-        List<RoomEntity> rooms;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            rooms = roomDao.findByFilter(session, filter);
-            transaction.commit();
-        }
-        return rooms;
+        return roomRepository.findByFilter(filter);
     }
 
-    public Optional<RoomEntity> create(RoomEntity room) {
-        Optional<RoomEntity> newRoom;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            newRoom = roomDao.create(session, room);
-            transaction.commit();
-        }
-        return newRoom;
+    public RoomEntity save(RoomEntity room) {
+        return roomRepository.save(room);
     }
 
     public RoomEntity getById(Long id) {
-        RoomEntity room;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            room = roomDao.findByID(session, id)
-                    .orElse(RoomEntity.builder()
-                            .number(1)
-                            .places(2)
-                            .build());
-            transaction.commit();
-        }
-        return room;
-    }
-
-    public Optional<RoomEntity> update(RoomEntity room) {
-        Optional<RoomEntity> newRoom;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            newRoom = roomDao.update(session, room);
-            transaction.commit();
-        }
-        return newRoom;
-    }
-
-    public boolean delete(Long id) {
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            if (roomDao.delete(session, id)) {
-                transaction.commit();
-                return true;
-            } else {
-                transaction.commit();
-                return false;
-            }
-        }
+        return roomRepository.findById(id)
+                .orElse(RoomEntity.builder()
+                        .number(100)
+                        .price(1)
+                        .statusRoom(StatusRoom.FREE)
+                        .classRoom(ClassRoom.STANDARD)
+                        .places(1)
+                        .build());
     }
 
     public List<RoomEntity> getAll() {
-        List<RoomEntity> rooms;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            rooms = roomDao.findAll(session);
-            transaction.commit();
-        }
-        return rooms;
+        return roomRepository.findAll();
     }
 
-    public static RoomService getInstance() {
-        return INSTANCE;
+    public boolean delete(Long id) {
+        roomRepository.deleteById(id);
+        return roomRepository.findById(id).isEmpty();
     }
 }

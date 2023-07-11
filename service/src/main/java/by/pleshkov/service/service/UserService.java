@@ -1,92 +1,48 @@
 package by.pleshkov.service.service;
 
-import by.pleshkov.database.dao.UserDao;
 import by.pleshkov.database.entity.UserEntity;
-import by.pleshkov.database.hibernate.HibernateFactory;
-import lombok.NoArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import by.pleshkov.database.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
+@Service
+@RequiredArgsConstructor
+@Transactional
 public class UserService {
-    private static final UserService INSTANCE = new UserService();
-    private final UserDao userDao = UserDao.getInstance();
-    private final HibernateFactory hibernateFactory = HibernateFactory.getInstance();
 
-    public Optional<UserEntity> save(UserEntity user) {
-        Optional<UserEntity> newUser;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            newUser = userDao.create(session, user);
-            transaction.commit();
+    private final UserRepository userRepository;
+
+    public UserEntity save(UserEntity user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            return null;
+        } else {
+            return userRepository.save(user);
         }
-        return newUser;
     }
 
     public UserEntity getById(Long id) {
-        UserEntity user;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            user = userDao.findByID(session, id)
-                    .orElse(UserEntity.builder()
-                            .name("XXX")
-                            .surname("YYYY")
-                            .build());
-            transaction.commit();
-        }
-        return user;
+        return userRepository.findById(id)
+                .orElse(UserEntity.builder()
+                        .name("XXX")
+                        .surname("XXX")
+                        .build());
     }
 
     public Optional<UserEntity> getBy(String email, String password) {
-        Optional<UserEntity> newUser;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            newUser = userDao.getByEmailAndPass(session, email, password);
-            transaction.commit();
-        }
-        return newUser;
-    }
-
-    public Optional<UserEntity> update(UserEntity user) {
-        Optional<UserEntity> newUser;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            newUser = userDao.update(session, user);
-            transaction.commit();
-        }
-        return newUser;
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     public boolean delete(Long id) {
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            if (userDao.delete(session, id)) {
-                transaction.commit();
-                return true;
-            } else {
-                transaction.commit();
-                return false;
-            }
-        }
+        userRepository.deleteById(id);
+        return userRepository.findById(id).isEmpty();
     }
 
     public List<UserEntity> getAll() {
-        List<UserEntity> users;
-        try (Session session = hibernateFactory.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            users = userDao.findAll(session);
-            transaction.commit();
-        }
-        return users;
-    }
-
-    public static UserService getInstance() {
-        return INSTANCE;
+        return userRepository.findAll();
     }
 }
 

@@ -8,14 +8,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
 @WebServlet("/login")
+@Controller
+@RequiredArgsConstructor
 public class LoginServlet extends HttpServlet {
-
-    private UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,6 +27,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        UserService userService = context.getBean(UserService.class);
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         userService.getBy(email, password)

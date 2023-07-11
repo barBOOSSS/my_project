@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@ToString(exclude = {"orders", "rooms", "passport"})
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = {"orders", "rooms", "passport"})
 @Table(name = "users")
 public class UserEntity extends CreatableEntity<Long> {
 

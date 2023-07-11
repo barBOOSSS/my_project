@@ -10,15 +10,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet("/room-created")
+@Controller
+@RequiredArgsConstructor
 public class CreateRoomServlet extends HttpServlet {
-
-    private final RoomService roomService = RoomService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,17 +29,20 @@ public class CreateRoomServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        Optional<RoomEntity> created = roomService.create(
-                RoomEntity.builder()
-                        .number(Integer.parseInt(req.getParameter("number")))
-                        .places(Integer.parseInt(req.getParameter("places")))
-                        .classRoom(ClassRoom.valueOf(req.getParameter("classRoom")))
-                        .statusRoom(StatusRoom.FREE)
-                        .build());
-        created.ifPresentOrElse(
-                room -> redirectToRoomPage(req, resp, room),
-                () -> onFailedCreation(req, resp)
-        );
+        ApplicationContext context = (ApplicationContext) getServletContext().getAttribute("applicationContext");
+        RoomService roomService = context.getBean(RoomService.class);
+        RoomEntity newRoom = RoomEntity.builder()
+                .number(Integer.parseInt(req.getParameter("number")))
+                .places(Integer.parseInt(req.getParameter("places")))
+                .price(Integer.parseInt(req.getParameter("price")))
+                .classRoom(ClassRoom.valueOf(req.getParameter("classRoom")))
+                .statusRoom(StatusRoom.FREE)
+                .build();
+        if (roomService.save(newRoom) != null) {
+            redirectToRoomPage(req, resp, newRoom);
+        } else {
+            onFailedCreation(req, resp);
+        }
     }
 
     @SneakyThrows

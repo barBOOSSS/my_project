@@ -14,14 +14,14 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.user.name}: ${sessionScope.user.role} </h1>
+<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.user.role} </h1>
 
 <c:forEach var="user" items="${requestScope.users}">
     <h2>Имя: ${user.name}</h2>
     <h2>Фамилия: ${user.surname}</h2>
     <h2>email: ${user.email}</h2>
     <h2>Роль: ${user.role}</h2>
-    <h2><a href=${pageContext.request.contextPath}/users?id=${user.id}>Показать пользователя</a></h2>
+    <h2><a href=${pageContext.request.contextPath}/users/${user.id}>Показать пользователя</a></h2>
 </c:forEach>
 
     <%@ include file="footer.jsp" %>

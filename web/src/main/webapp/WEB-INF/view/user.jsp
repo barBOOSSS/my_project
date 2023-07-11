@@ -18,20 +18,18 @@
 <h2>Фамилия: ${user.surname}</h2>
 <h2>email: ${user.email}</h2>
 <h2>Роль: ${user.role}</h2>
-<h2>Адрес: ${user.address.city}, ${user.address.street}, ${user.address.building}, ${user.address.flat}</h2>
-<h2>Номер паспорта: ${user.passport.number}</h2>
+<h2>Адрес: ${user.city}, ${user.street}, ${user.building}, ${user.flat}</h2>
+<h2>Номер паспорта: ${user.passport}</h2>
 
-<form action="${pageContext.request.contextPath}/user-edit" method="get">
-    <input type="hidden" name="id" value="${user.id}">
+<form action="${pageContext.request.contextPath}/users/update/${user.id}" method="get">
     <input type="submit" value="Изменить">
 </form>
 
-<form action="${pageContext.request.contextPath}/users" method="post">
-    <input type="hidden" name="id" value="${user.id}">
+<form action="${pageContext.request.contextPath}/users/${user.id}/delete" method="post">
     <input type="submit" value="Удалить">
 </form>
 
-<c:if test="${ param.error == true}">
+<c:if test="${param.error == true}">
     Пользователь не удален
     </c:if>
 

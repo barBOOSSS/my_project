@@ -3,15 +3,16 @@ package by.pleshkov.database.entity;
 import by.pleshkov.database.constant.ClassRoom;
 import by.pleshkov.database.constant.StatusRoom;
 
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.CascadeType;
 import lombok.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,7 +55,7 @@ public class RoomEntity implements BaseEntity<Long> {
     private StatusRoom statusRoom;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "rooms")
+    @ManyToMany(mappedBy = "rooms", cascade = CascadeType.REMOVE)
     private List<UserEntity> users = new ArrayList<>();
 
     public void addUser(UserEntity user) {

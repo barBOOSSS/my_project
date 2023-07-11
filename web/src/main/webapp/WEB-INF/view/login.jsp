@@ -15,8 +15,8 @@
 <%@ include file="header.jsp" %>
 
 <form action="${pageContext.request.contextPath}/login" method="post">
-    <label for="emailId">Email:</label><br>
-    <input type="email" id="emailId" name="email"><br>
+    <label for="usernameId">Email:</label><br>
+    <input type="email" id="usernameId" name="username"><br>
 
     <label for="passwordId">Password:</label><br>
     <input type="password" id="passwordId" name="password"><br><br>
@@ -28,7 +28,7 @@
     <input type="submit" value="Registration">
 </form>
 
-<c:if test="${ param.error == true}">
+<c:if test="${ param.error != null}">
 Неправильный email или пароль
 </c:if>
 

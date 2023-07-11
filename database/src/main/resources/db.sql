@@ -11,7 +11,7 @@ CREATE TABLE users
     id         BIGSERIAL PRIMARY KEY,
     name       VARCHAR(50) NOT NULL,
     surname    VARCHAR(50) NOT NULL,
-    password   VARCHAR(50) NOT NULL,
+    password   VARCHAR(256) NOT NULL,
     email      VARCHAR(50) NOT NULL UNIQUE,
     role       VARCHAR(10) NOT NULL,
     city       VARCHAR(50) NULL,

@@ -6,10 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <h1>Меню <a href=${pageContext.request.contextPath}/main>Главная</a></h1>
 
-    <c:if test="${ sessionScope.user != null }">
-        <form action="${pageContext.request.contextPath}/logout" method="get">
+    <c:if test="${ sessionScope.SPRING_SECURITY_CONTEXT != null }">
+        <form action="/logout" method="post">
         <input type="submit" value="Logout">
     </c:if>
 

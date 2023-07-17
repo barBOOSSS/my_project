@@ -14,7 +14,8 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<form action="${pageContext.request.contextPath}/room-created" method="post">
+<form action="${pageContext.request.contextPath}/rooms/create" method="post">
+
     <label for="numberId">Номер комнаты:</label><br>
     <input type="text" id="numberId" name="number"><br>
 
@@ -29,6 +30,7 @@
         <option value="STANDARD">STANDARD</option>
         <option value="SUITE">SUITE</option>
     </select>
+
     <input type="submit" value="Создать">
 </form>
 

@@ -18,21 +18,18 @@
 <h2>Фамилия: ${user.surname}</h2>
 <h2>email: ${user.email}</h2>
 <h2>Роль: ${user.role}</h2>
-<h2>Адрес: ${user.address.city}, ${user.address.street}, ${user.address.building}, ${user.address.flat}</h2>
-<h2>Номер паспорта: ${user.passport.number}</h2>
+<h2>Адрес: ${user.city}, ${user.street}, ${user.building}, ${user.flat}</h2>
+<h2>Номер паспорта: ${user.passport}</h2>
 
-<form action="${pageContext.request.contextPath}/user-edit" method="post">
+<form action="${pageContext.request.contextPath}/users/update/${user.id}" method="post">
     <label for="emailId">Email:</label><br>
-    <input type="email" id="emailId" name="email"><br>
-
-    <label for="passwordId">Пароль:</label><br>
-    <input type="password" id="passwordId" name="password"><br><br>
+    <input type="email" id="emailId" name="email" value="${user.email}"><br>
 
     <label for="nameId">Имя:</label><br>
-    <input type="text" id="nameId" name="name"><br>
+    <input type="text" id="nameId" name="name" value="${user.name}"><br>
 
     <label for="surnameId">Фамилия:</label><br>
-    <input type="text" id="surnameId" name="surname"><br>
+    <input type="text" id="surnameId" name="surname" value="${user.surname}"><br>
 
     <label for="roleId">Роль:</label><br>
     <select name="role" id="roleId">
@@ -42,26 +39,25 @@
     </select>
 
     <label for="cityId">Город:</label><br>
-    <input type="text" id="cityId" name="city"><br>
+    <input type="text" id="cityId" name="city" value="${user.city}"><br>
 
     <label for="streetId">Улица:</label><br>
-    <input type="text" id="streetId" name="street"><br>
+    <input type="text" id="streetId" name="street" value="${user.street}"><br>
 
     <label for="buildingId">Номер дома:</label><br>
-    <input type="text" id="buildingId" name="building"><br>
+    <input type="text" id="buildingId" name="building" value="${user.building}"><br>
 
     <label for="flatId">Номер квартиры:</label><br>
-    <input type="text" id="flatId" name="flat"><br>
+    <input type="text" id="flatId" name="flat" value="${user.flat}"><br>
 
     <label for="passportId">Номер пасспорта:</label><br>
-    <input type="text" id="passportId" name="passport"><br>
+    <input type="text" id="passportId" name="passport" value="${user.passport}"><br>
 
-    <input type="hidden" name="id" value="${user.id}">
     <input type="submit" value="Изменить">
 
 </form>
 
-<c:if test="${ param.error == true}">
+<c:if test="${param.error == true}">
     Пользователь не изменен
 </c:if>
 

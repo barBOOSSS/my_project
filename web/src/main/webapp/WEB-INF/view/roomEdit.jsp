@@ -17,15 +17,19 @@
 <h2>ID комнаты: ${room.id}</h2>
 <h2>Номер комнаты: ${room.number}</h2>
 <h2>Количество мест в номере: ${room.places}</h2>
+<h2>Стоимость номера: ${room.price}</h2>
 <h2>Класс номера: ${room.classRoom}</h2>
 <h2>Статус номера: ${room.statusRoom}</h2>
 
-<form action="${pageContext.request.contextPath}/room-edit" method="post">
+<form action="${pageContext.request.contextPath}/rooms/update/${room.id}" method="post">
     <label for="numberId">Номер комнаты:</label><br>
-    <input type="text" id="numberId" name="number"><br>
+    <input type="text" id="numberId" name="number" value="${room.number}"><br>
 
     <label for="placesId">Количество мест:</label><br>
-    <input type="text" id="placesId" name="places"><br><br>
+    <input type="text" id="placesId" name="places" value="${room.places}"><br>
+
+    <label for="priceId">Стоимость номера:</label><br>
+    <input type="text" id="priceId" name="price" value="${room.price}"><br>
 
     <label for="classRoomId">Класс комнаты:</label><br>
     <select name="classRoom" id="classRoomId">
@@ -39,11 +43,11 @@
         <option value="NOT_FREE">NOT FREE</option>
     </select>
 
-    <input type="hidden" name="id" value="${room.id}">
+<%--    <input type="hidden" name="id" value="${room.id}">--%>
     <input type="submit" value="Изменить">
 </form>
 
-<c:if test="${ param.error == true}">
+<c:if test="${param.error == true}">
     Комната не изменена
 </c:if>
 

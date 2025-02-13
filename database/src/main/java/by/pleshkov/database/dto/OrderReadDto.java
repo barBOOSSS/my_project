@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 public class OrderReadDto {
     private Long id;
     private Integer price;
+    private Integer numberRoom;
     private StatusOrder statusOrder;
     private Solution solution;
-    private String user;
+    private String userName;
+    private String userSurname;
 }

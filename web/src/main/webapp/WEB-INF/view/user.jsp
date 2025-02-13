@@ -21,6 +21,7 @@
 <h2>Адрес: ${user.city}, ${user.street}, ${user.building}, ${user.flat}</h2>
 <h2>Номер паспорта: ${user.passport}</h2>
 
+<sec:authorize access="hasAuthority('ADMIN')">
 <form action="${pageContext.request.contextPath}/users/update/${user.id}" method="get">
     <input type="submit" value="Изменить">
 </form>
@@ -28,6 +29,7 @@
 <form action="${pageContext.request.contextPath}/users/${user.id}/delete" method="post">
     <input type="submit" value="Удалить">
 </form>
+</sec:authorize>
 
 <c:if test="${param.error == true}">
     Пользователь не удален

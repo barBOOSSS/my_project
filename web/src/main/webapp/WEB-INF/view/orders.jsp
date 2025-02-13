@@ -14,14 +14,18 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.user.role} </h1>
+<%--<sec:authorize access="hasAuthority('ADMIN') or hasAuthority('MANAGER')">--%>
+<%--<form action="${pageContext.request.contextPath}/orders/create" method="get">--%>
+<%--    <input type="submit" value="Создать заказ">--%>
+<%--</form>--%>
+<%--</sec:authorize>--%>
 
-<form action="${pageContext.request.contextPath}/orders/create" method="get">
-    <input type="submit" value="Создать заказ">
+<%--<h1>Email: ${user.get().email}</h1>--%>
 
 <c:forEach var="order" items="${requestScope.orders}">
     <h2>ID заказа: ${order.id}</h2>
-    <h2>Пользователь: ${order.user}</h2>
+    <h2>Пользователь: ${order.userName} ${order.userSurname}</h2>
+    <h2>Номер комнаты: ${order.numberRoom}</h2>
     <h2>Сумма заказа: ${order.price}</h2>
     <h2>Статус заказа: ${order.statusOrder}</h2>
     <h2>Решение: ${order.solution} </h2>

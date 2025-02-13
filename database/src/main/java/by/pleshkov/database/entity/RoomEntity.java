@@ -12,7 +12,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.CascadeType;
 import lombok.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,7 +54,7 @@ public class RoomEntity implements BaseEntity<Long> {
     private StatusRoom statusRoom;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "rooms", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "rooms")
     private List<UserEntity> users = new ArrayList<>();
 
     public void addUser(UserEntity user) {

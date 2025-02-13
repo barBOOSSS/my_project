@@ -14,11 +14,16 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h2><a href=${pageContext.request.contextPath}/main?id=1>1 - Список комнат</a></h2>
-<h2><a href=${pageContext.request.contextPath}/main?id=2>2 - Список заказов</a></h2>
-<c:if test="${ sessionScope.user.role == 'ADMIN'}">
-    <h2><a href=${pageContext.request.contextPath}/main?id=3>3 - Список пользователей</a></h2>
-</c:if>
+<h1> Пользователь: ${user.get().name} ${user.get().surname}</h1>
+<h1> Роль: ${user.get().role}</h1>
+
+<h2><a href=${pageContext.request.contextPath}/rooms>1 -Номера</a></h2>
+<h2><a href=${pageContext.request.contextPath}/orders>2 - Заказы</a></h2>
+
+<sec:authorize access="hasAuthority('ADMIN') or hasAuthority('MANAGER')">
+    <h2><a href=${pageContext.request.contextPath}/users>3 - Пользователи</a></h2>
+</sec:authorize>
+
 
 <%@ include file="footer.jsp" %>
 </body>

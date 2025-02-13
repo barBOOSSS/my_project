@@ -14,11 +14,13 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.user.name} ${sessionScope.user.role} </h1>
+<%--<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.authorities}</h1>--%>
 
-<form action="${pageContext.request.contextPath}/rooms/create" method="get">
-    <input type="submit" value="Создать комнату">
-</form>
+<sec:authorize access="hasAuthority('ADMIN') or hasAuthority('MANAGER')">
+    <form action="${pageContext.request.contextPath}/rooms/create" method="get">
+        <input type="submit" value="Создать комнату">
+    </form>
+</sec:authorize>
 
 <c:forEach var="room" items="${requestScope.rooms}">
     <h2>ID комнаты: ${room.id}</h2>
@@ -28,7 +30,6 @@
     <h2>Статус номера: ${room.statusRoom}</h2>
     <h2><a href=${pageContext.request.contextPath}/rooms/${room.id}>Показать номер</a></h2>
 </c:forEach>
-
 
 <form action="${pageContext.request.contextPath}/rooms" method="get">
 
@@ -46,7 +47,7 @@
     </div>
     <div>
         <label for="placesId">Количество мест в комнате:</label>
-        <input  type="text" id="placesId" name="places">
+        <input type="text" id="placesId" name="places">
     </div>
     <div>
         <label for="classRoomId">Класс комнаты:</label><br>

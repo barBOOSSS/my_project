@@ -14,7 +14,7 @@
 <body>
 <%@ include file="header.jsp" %>
 
-<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.user.role} </h1>
+<%--<h1> ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username} ${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.authorities}</h1>--%>
 
 <c:forEach var="user" items="${requestScope.users}">
     <h2>Имя: ${user.name}</h2>

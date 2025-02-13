@@ -15,27 +15,32 @@
 <%@ include file="header.jsp" %>
 
 <h2>ID заказа: ${order.id}</h2>
-<h2>Пользователь: ${order.user}</h2>
+<h2>Пользователь: ${order.userName} ${order.userName}</h2>
+<h2>Номер комнаты: ${order.numberRoom}</h2>
 <h2>Сумма заказа: ${order.price}</h2>
 <h2>Статус заказа: ${order.statusOrder}</h2>
 <h2>Решение: ${order.solution} </h2>
 
 <form action="${pageContext.request.contextPath}/orders/update/${order.id}" method="post">
 
-    <label for="pricedId">Сумма заказа:</label><br>
-    <input type="text" id="pricedId" name="price" value="${order.price}"><br>
 
-    <label for="statusOrderId">Статус заказа:</label><br>
-    <select name="statusOrder" id="statusOrderId">
-        <option value="NEW">NEW</option>
-        <option value="CLOSE">CLOSE</option>
-    </select>
+    <input type="hidden" name="numberRoom" value=${order.numberRoom}>
+
+<%--    <label for="pricedId">Сумма заказа:</label><br>--%>
+    <input type="hidden" name="price" value=${order.price}>
+
+<%--    <label for="statusOrderId">Статус заказа:</label><br>--%>
+<%--    <select name="statusOrder" id="statusOrderId">--%>
+<%--        <option value="NEW">NEW</option>--%>
+<%--        <option value="CLOSE">CLOSE</option>--%>
+<%--    </select>--%>
+    <input type="hidden" name="statusOrder" value="CLOSE"><br>
 
     <label for="solutionId">Решение:</label><br>
     <select name="solution" id="solutionId">
         <option value="APPROVED">APPROVED</option>
         <option value="DENIED">DENIED</option>
-        <option value="UNPROCESSED">UNPROCESSED</option>
+<%--        <option value="UNPROCESSED">UNPROCESSED</option>--%>
     </select>
 
     <input type="submit" value="Изменить">

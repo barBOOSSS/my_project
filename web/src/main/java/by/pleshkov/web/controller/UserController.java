@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static by.pleshkov.web.util.PagesUtil.USERS;
 
 @Controller
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
 @RequestMapping(USERS)
 @RequiredArgsConstructor
 public class UserController {

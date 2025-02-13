@@ -19,5 +19,5 @@ public class RoomCreationDto {
     private ClassRoom classRoom;
     private Integer price;
     private StatusRoom statusRoom;
-    private List<Long> usersIds = new ArrayList<>();
+    private Long userId;
 }

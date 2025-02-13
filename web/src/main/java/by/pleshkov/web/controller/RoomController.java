@@ -4,8 +4,11 @@ import by.pleshkov.database.constant.StatusRoom;
 import by.pleshkov.database.dto.RoomCreationDto;
 import by.pleshkov.database.dto.RoomFilter;
 import by.pleshkov.service.service.RoomService;
+import by.pleshkov.service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import static by.pleshkov.web.util.PagesUtil.ROOMS;
 public class RoomController {
 
     private final RoomService roomService;
+    private final UserService userService;
 
     @GetMapping
     public String getRoomsPage(Model model, RoomFilter roomFilter) {
@@ -29,9 +33,10 @@ public class RoomController {
     }
 
     @GetMapping(path = "/{id}")
-    public String getRoomPage(Model model, @PathVariable Long id) {
-        return roomService.getById(id).
-                map(room -> {
+    public String getRoomPage(Model model, @PathVariable Long id, @AuthenticationPrincipal User user) {
+        model.addAttribute("user", userService.getByEmail(user.getUsername()));
+        return roomService.getById(id)
+                .map(room -> {
                     model.addAttribute("room", room);
                     return "room";
                 })

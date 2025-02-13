@@ -32,6 +32,11 @@ public class UserService implements UserDetailsService {
                 .map(this::toReadDto);
     }
 
+    public Optional<UserReadDto> getByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(this::toReadDto);
+    }
+
     public List<UserReadDto> getAll() {
         return userRepository.findAll()
                 .stream()

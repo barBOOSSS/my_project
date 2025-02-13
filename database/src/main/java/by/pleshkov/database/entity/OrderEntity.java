@@ -38,6 +38,9 @@ public class OrderEntity extends CreatableEntity<Long> {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Column(name = "number_room", nullable = false)
+    private Integer numberRoom;
+
     @Column(name = "price", nullable = false)
     private Integer price;
 
@@ -48,6 +51,4 @@ public class OrderEntity extends CreatableEntity<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "solution", nullable = false)
     private Solution solution;
-
-
 }
